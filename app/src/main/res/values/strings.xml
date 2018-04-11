@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">BakingApp</string>
+    <string name="error_get_data">There was a problem during the data request</string>
+</resources>
