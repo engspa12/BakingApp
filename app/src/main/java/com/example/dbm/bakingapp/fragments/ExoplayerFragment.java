@@ -12,10 +12,12 @@ import android.support.v4.media.session.PlaybackStateCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.dbm.bakingapp.R;
 import com.example.dbm.bakingapp.classes.RecipeStep;
+import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.ExoPlaybackException;
 import com.google.android.exoplayer2.ExoPlayer;
@@ -34,20 +36,32 @@ import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ExoplayerFragment extends Fragment implements ExoPlayer.EventListener {
 
     private SimpleExoPlayer mExoPlayer;
     private SimpleExoPlayerView mPlayerView;
-    private static MediaSessionCompat mMediaSession;
-    private PlaybackStateCompat.Builder mStateBuilder;
 
-    private static final String TEST_URL = "https://d17h27t6h515a5.cloudfront.net/topher/2017/April/58ffd974_-intro-creampie/-intro-creampie.mp4";
+    private static final String STEPS_LIST = "list";
+
+    private static final String STEPS_LIST_INDEX = "index";
+
+    private static final String PLAYER_POSITION = "player_position";
+
+    //private static final String TEST_URL = "https://d17h27t6h515a5.cloudfront.net/topher/2017/April/58ffd974_-intro-creampie/-intro-creampie.mp4";
 
     private int mListStepIndex;
 
     private List<RecipeStep> mListSteps;
+
+    private String media;
+
+    private long mPosition;
+
+    private ImageView emptyImageView;
+    private TextView noVideoTextView;
 
     private static final String LOG = ExoplayerFragment.class.getSimpleName();
 
@@ -59,12 +73,38 @@ public class ExoplayerFragment extends Fragment implements ExoPlayer.EventListen
 
         View rootView = inflater.inflate(R.layout.fragment_exoplayer, container, false);
 
-        //TextView exoplayertextView = (TextView) rootView.findViewById(R.id.exoplayer_tv);
-        //exoplayertextView.setText("EXOPLAYER PLACEHOLDER");
+        noVideoTextView = (TextView) rootView.findViewById(R.id.no_video_text_view);
+        noVideoTextView.setText("THERE IS NO VIDEO FOR THIS STEP, PLEASE FOLLOW INSTRUCTIONS BELOW");
+        noVideoTextView.setVisibility(View.GONE);
+
+        emptyImageView = (ImageView) rootView.findViewById(R.id.empty_image_view);
+        emptyImageView.setVisibility(View.GONE);
+
+        if(savedInstanceState != null){
+            mPosition = savedInstanceState.getLong(PLAYER_POSITION);
+        }
 
         mPlayerView = (SimpleExoPlayerView) rootView.findViewById(R.id.playerView);
 
-        initializePlayer(Uri.parse(TEST_URL));
+        if(mListSteps != null) {
+            media = mListSteps.get(mListStepIndex).getmStepVideoUrl();
+        } else{
+            mListSteps = savedInstanceState.getParcelableArrayList(STEPS_LIST);
+            mListStepIndex = savedInstanceState.getInt(STEPS_LIST_INDEX);
+            media = mListSteps.get(mListStepIndex).getmStepVideoUrl();
+        }
+
+        if (media != null && !(media.equals(""))){
+            initializePlayer(Uri.parse(media));
+        } else{
+            if(mListSteps.get(mListStepIndex).getmStepThumbnailUrl().equals("")) {
+                emptyImageView.setVisibility(View.VISIBLE);
+                noVideoTextView.setVisibility(View.VISIBLE);
+            } else{
+
+                noVideoTextView.setVisibility(View.VISIBLE);
+            }
+        }
 
         return rootView;
     }
@@ -96,6 +136,9 @@ public class ExoplayerFragment extends Fragment implements ExoPlayer.EventListen
             String userAgent = Util.getUserAgent(getContext(), "BakingApp");
             MediaSource mediaSource = new ExtractorMediaSource(mediaUri, new DefaultDataSourceFactory(
                     getContext(), userAgent), new DefaultExtractorsFactory(), null, null);
+            if (mPosition != C.TIME_UNSET && mExoPlayer != null) {
+                mExoPlayer.seekTo(mPosition);
+            }
             mExoPlayer.prepare(mediaSource);
             mExoPlayer.setPlayWhenReady(true);
         }
@@ -133,9 +176,12 @@ public class ExoplayerFragment extends Fragment implements ExoPlayer.EventListen
 
     private void releasePlayer() {
         //mNotificationManager.cancelAll();
-        mExoPlayer.stop();
-        mExoPlayer.release();
-        mExoPlayer = null;
+        if(mExoPlayer != null) {
+            mExoPlayer.stop();
+            mExoPlayer.release();
+            mExoPlayer = null;
+        }
+
     }
 
     @Override
@@ -145,7 +191,19 @@ public class ExoplayerFragment extends Fragment implements ExoPlayer.EventListen
         //mMediaSession.setActive(false);
     }
 
-    public void updatePlayer(){
-        //WE CALL THIS METHOD WHEN THE PREVIOUS OR NEXT BUTTON IS PRESSED
+    public void updatePlayer() {
+        releasePlayer();
     }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle currentState) {
+        super.onSaveInstanceState(currentState);
+        currentState.putParcelableArrayList(STEPS_LIST, (ArrayList<RecipeStep>) mListSteps);
+        currentState.putInt(STEPS_LIST_INDEX, mListStepIndex);
+        if(mExoPlayer != null) {
+            currentState.putLong(PLAYER_POSITION, mExoPlayer.getCurrentPosition());
+        }
+    }
+
+
 }

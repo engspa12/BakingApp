@@ -1,8 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.exoplayer2.ui.SimpleExoPlayerView
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/playerView"
-    android:layout_margin="0dp"
-    android:padding="0dp"
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"/>
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <FrameLayout
+        android:layout_weight="5"
+        android:layout_width="match_parent"
+        android:layout_height="0dp">
+
+        <com.google.android.exoplayer2.ui.SimpleExoPlayerView
+            android:id="@+id/playerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:resize_mode="fill" />
+
+        <ImageView
+            android:id="@+id/empty_image_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:adjustViewBounds="true"
+            android:scaleType="fitXY"
+            android:src="@drawable/instructions_placeholder" />
+
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/no_video_text_view"
+        tools:text="TEST"
+        android:textColor="#2E7D32"
+        android:textStyle="bold"
+        android:textSize="16sp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:padding="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="0dp" />
+</LinearLayout>

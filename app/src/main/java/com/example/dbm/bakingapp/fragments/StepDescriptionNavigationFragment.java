@@ -1,9 +1,11 @@
 package com.example.dbm.bakingapp.fragments;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,7 +24,7 @@ public class StepDescriptionNavigationFragment extends Fragment {
 
     private static final String STEPS_LIST = "steps_list";
 
-    private static final String LIST_INDEX = "list_index";
+    private static final String STEPS_LIST_INDEX = "list_index";
 
     private int mListStepIndex;
 
@@ -34,11 +36,27 @@ public class StepDescriptionNavigationFragment extends Fragment {
 
     private TextView stepDescriptionTV;
 
-    //public interface buttonChange{
-    //
-    //}
+    ButtonChangeListener mCallback;
+
+    public interface ButtonChangeListener{
+        void onButtonClicked(int index);
+    }
 
     public StepDescriptionNavigationFragment(){}
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        // This makes sure that the host activity has implemented the callback interface
+        // If not, it throws an exception
+        try {
+            mCallback = (ButtonChangeListener) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString()
+                    + " must implement ButtonChangeListener");
+        }
+    }
 
     @Nullable
     @Override
@@ -53,6 +71,10 @@ public class StepDescriptionNavigationFragment extends Fragment {
         previousStepButton.setText("Previous Step");
         nextStepButton.setText("Next Step");
 
+        if(savedInstanceState != null) {
+            listSteps = savedInstanceState.getParcelableArrayList(STEPS_LIST);
+        }
+
         if(listSteps != null) {
 
             getStepDataFromIndex();
@@ -64,6 +86,7 @@ public class StepDescriptionNavigationFragment extends Fragment {
                         mListStepIndex--;
                     }
                     getStepDataFromIndex();
+                    mCallback.onButtonClicked(mListStepIndex);
                     //stepDescriptionTV.setText(listSteps.get(mListStepIndex).getmStepDescription());
                     //setStepTitle();
                 }
@@ -76,11 +99,13 @@ public class StepDescriptionNavigationFragment extends Fragment {
                         mListStepIndex++;
                     }
                     getStepDataFromIndex();
+                    mCallback.onButtonClicked(mListStepIndex);
                     //stepDescriptionTV.setText(listSteps.get(mListStepIndex).getmStepDescription());
                     //setStepTitle();
                 }
             });
         }
+
 
         return rootView;
     }
@@ -89,7 +114,7 @@ public class StepDescriptionNavigationFragment extends Fragment {
     public void onSaveInstanceState(@NonNull Bundle currentState) {
         super.onSaveInstanceState(currentState);
         currentState.putParcelableArrayList(STEPS_LIST, (ArrayList<RecipeStep>) listSteps);
-        currentState.putInt(LIST_INDEX, mListStepIndex);
+        currentState.putInt(STEPS_LIST_INDEX, mListStepIndex);
     }
 
     public void setStepIndex(int index) {

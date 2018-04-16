@@ -50,10 +50,10 @@ public class MasterListFragment extends Fragment implements MasterListAdapter.Li
             //mRecipe = (Recipe) getActivity().getIntent().getParcelableExtra("extra_recipe");
             mListSteps = getActivity().getIntent().getParcelableArrayListExtra("extra_recipe_steps");
             mListIngredients = getActivity().getIntent().getParcelableArrayListExtra("extra_recipe_ingredients");
-            Log.v(LOG,"list was OKAY");
+            //Log.v(LOG,"list was OKAY");
         } catch (ClassCastException e) {
             throw new ClassCastException(context.toString()
-                    + " must implement OnImageClickListener");
+                    + " must implement OnClickRecipeListener");
         }
     }
 

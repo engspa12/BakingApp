@@ -1,30 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
-    android:background="#80DEEA"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/step_detail_linear_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#80DEEA"
+    android:orientation="vertical"
     tools:context="com.example.dbm.bakingapp.StepDetailActivity">
 
-    <LinearLayout
-        android:id="@+id/step_detail_linear_layout"
+    <FrameLayout
+        android:id="@+id/exoplayer_container"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_height="0dp"
+        android:layout_weight="1.75"
+        android:background="#FFFFFF"
+        android:scaleType="fitXY" />
 
-        <FrameLayout
-            android:background="#000000"
-            android:id="@+id/exoplayer_container"
-            android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:scaleType="fitXY"/>
+    <FrameLayout
+        android:id="@+id/step_description_navigation_container"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:scaleType="centerInside" />
 
-        <FrameLayout android:id="@+id/step_instruction_navigation_container"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scaleType="centerInside"/>
+</LinearLayout>
 
-    </LinearLayout>
-
-</ScrollView>
