@@ -1,8 +1,10 @@
 package com.example.dbm.bakingapp;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -13,6 +15,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
+import com.example.dbm.bakingapp.classes.Recipe;
 import com.example.dbm.bakingapp.classes.RecipeStep;
 import com.example.dbm.bakingapp.fragments.ExoplayerFragment;
 import com.example.dbm.bakingapp.fragments.StepDescriptionNavigationFragment;
@@ -26,6 +29,8 @@ public class StepDetailActivity extends AppCompatActivity implements StepDescrip
 
     private ActionBar ab;
 
+    private static final String STEP_INDEX = "step_index";
+
     private ExoplayerFragment exoplayerFragment;
     private StepDescriptionNavigationFragment stepDescriptionNavigationFragment;
 
@@ -34,6 +39,9 @@ public class StepDetailActivity extends AppCompatActivity implements StepDescrip
     private boolean screenRotated;
 
     private boolean firstLaunch;
+
+    private Recipe mRecipe;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,34 +53,32 @@ public class StepDetailActivity extends AppCompatActivity implements StepDescrip
         fragmentManager = getSupportFragmentManager();
 
         Intent intent = getIntent();
-        if (intent.hasExtra("extra_step_index")) {
-            mStepListIndex = intent.getIntExtra("extra_step_index", 0);
-            mListSteps = intent.getParcelableArrayListExtra("extra_recipe_steps");
-            //setTitle(mListSteps.get(mStepListIndex).getmStepShortDescription());
+        if (intent.hasExtra(getString(R.string.extra_step_index))) {
+            mStepListIndex = intent.getIntExtra(getString(R.string.extra_step_index), 0);
+            mListSteps = intent.getParcelableArrayListExtra(getString(R.string.extra_recipe_steps));
+            mRecipe = intent.getParcelableExtra(getString(R.string.extra_recipe));
+            setTitle(mRecipe.getmRecipeName());
         }
 
     }
 
     public void checkFragments() {
 
-        if (screenRotated) {
-            if(!firstLaunch) {
-                View decorView = getWindow().getDecorView();
-                // Hide the status bar.
-                int uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN;
-                decorView.setSystemUiVisibility(uiOptions);
-                // Remember that you should never show the action bar if the
-                // status bar is hidden, so hide that too if necessary.
-                ab = getSupportActionBar();
-                ab.hide();
-            } else{
+            if (screenRotated) {
+                if (!firstLaunch) {
+                    View decorView = getWindow().getDecorView();
+                    int uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN;
+                    decorView.setSystemUiVisibility(uiOptions);
+                    ab = getSupportActionBar();
+                    ab.hide();
+                } else {
+                    buildFragments();
+                    firstLaunch = false;
+                }
+            } else {
                 buildFragments();
                 firstLaunch = false;
             }
-        } else {
-            buildFragments();
-            firstLaunch = false;
-        }
 
     }
 
@@ -80,9 +86,8 @@ public class StepDetailActivity extends AppCompatActivity implements StepDescrip
 
         if (findViewById(R.id.step_description_navigation_container) != null) {
 
-            // Get a support ActionBar corresponding to this toolbar
+
             ab = getSupportActionBar();
-            // Enable the Up button
             ab.setDisplayHomeAsUpEnabled(true);
 
             stepDescriptionNavigationFragment = new StepDescriptionNavigationFragment();
@@ -112,11 +117,8 @@ public class StepDetailActivity extends AppCompatActivity implements StepDescrip
         } else {
 
             View decorView = getWindow().getDecorView();
-            // Hide the status bar.
             int uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN;
             decorView.setSystemUiVisibility(uiOptions);
-            // Remember that you should never show the action bar if the
-            // status bar is hidden, so hide that too if necessary.
             ab = getSupportActionBar();
             ab.hide();
 
@@ -175,7 +177,7 @@ public class StepDetailActivity extends AppCompatActivity implements StepDescrip
 
     @Override
     public void onButtonClicked(int index) {
-        //exoplayerFragment.updatePlayer();
+
         exoplayerFragment = new ExoplayerFragment();
         exoplayerFragment.setStepsList(mListSteps);
         exoplayerFragment.setStepIndex(index);
@@ -203,4 +205,11 @@ public class StepDetailActivity extends AppCompatActivity implements StepDescrip
         firstLaunch = savedInstanceState.getBoolean("first_launch");
     }
 
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent();
+        intent.putExtra(STEP_INDEX,mStepListIndex);
+        setResult(Activity.RESULT_OK,intent);
+        super.onBackPressed();
+    }
 }

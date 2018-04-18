@@ -48,8 +48,6 @@ public class StepDescriptionNavigationFragment extends Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
 
-        // This makes sure that the host activity has implemented the callback interface
-        // If not, it throws an exception
         try {
             mCallback = (ButtonChangeListener) context;
         } catch (ClassCastException e) {
@@ -68,8 +66,8 @@ public class StepDescriptionNavigationFragment extends Fragment {
         previousStepButton = (Button) rootView.findViewById(R.id.previous_step_button);
         nextStepButton = (Button) rootView.findViewById(R.id.next_step_button);
 
-        previousStepButton.setText("Previous Step");
-        nextStepButton.setText("Next Step");
+        previousStepButton.setText(getString(R.string.previous_step));
+        nextStepButton.setText(getString(R.string.next_step));
 
         if(savedInstanceState != null) {
             listSteps = savedInstanceState.getParcelableArrayList(STEPS_LIST);
@@ -87,8 +85,6 @@ public class StepDescriptionNavigationFragment extends Fragment {
                     }
                     getStepDataFromIndex();
                     mCallback.onButtonClicked(mListStepIndex);
-                    //stepDescriptionTV.setText(listSteps.get(mListStepIndex).getmStepDescription());
-                    //setStepTitle();
                 }
             });
 
@@ -100,8 +96,6 @@ public class StepDescriptionNavigationFragment extends Fragment {
                     }
                     getStepDataFromIndex();
                     mCallback.onButtonClicked(mListStepIndex);
-                    //stepDescriptionTV.setText(listSteps.get(mListStepIndex).getmStepDescription());
-                    //setStepTitle();
                 }
             });
         }
@@ -139,7 +133,7 @@ public class StepDescriptionNavigationFragment extends Fragment {
         } else{
             stepDescriptionTV.setText(listSteps.get(mListStepIndex).getmStepDescription());
         }
-        setStepTitle();
+        //setStepTitle();
     }
 
     public void setStepTitle(){

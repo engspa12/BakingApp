@@ -26,8 +26,6 @@ public class Recipe implements Parcelable {
     private Recipe(Parcel in) {
         mRecipeId = in.readInt();
         mRecipeName = in.readString();
-    //    in.readTypedList(mRecipeIngredients, RecipeIngredient.CREATOR);
-    //    in.readTypedList(mRecipeSteps, RecipeStep.CREATOR);
         mRecipeServings = in.readInt();
         mRecipeImage = in.readString();
     }
@@ -41,8 +39,6 @@ public class Recipe implements Parcelable {
     public void writeToParcel(Parcel out, int flags) {
         out.writeInt(mRecipeId);
         out.writeString(mRecipeName);
-     //   out.writeTypedList(mRecipeIngredients);
-    //   out.writeTypedList(mRecipeSteps);
         out.writeInt(mRecipeServings);
         out.writeString(mRecipeImage);
     }

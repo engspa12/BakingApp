@@ -124,12 +124,10 @@ public class MasterListAdapter extends RecyclerView.Adapter<MasterListAdapter.St
                 stepTextView.setGravity(Gravity.START);
                 stepTextView.setBackgroundColor(mContext.getResources().getColor(R.color.colorRecipeIngredients));
             } else {
-                //if(listIndex - 1 < listOfSteps.size()) {
                     stepTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP,22);
                     stepTextView.setGravity(Gravity.CENTER);
                     setStepTitle(listIndex - 1);
                     stepTextView.setBackgroundColor(mContext.getResources().getColor(R.color.colorRecipeSteps));
-                //}
             }
 
             //if(mTabletModeEnabled) {

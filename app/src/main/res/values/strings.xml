@@ -1,4 +1,13 @@
 <resources>
     <string name="app_name">BakingApp</string>
     <string name="error_get_data">There was a problem during the data request</string>
+    <string name="no_video_or_image_message">THERE IS NO VIDEO OR IMAGE FOR THIS STEP, PLEASE FOLLOW INSTRUCTIONS BELOW</string>
+    <string name="previous_step">Previous Step</string>
+    <string name="next_step">"Next Step"</string>
+    <string name="extra_recipe_steps">extra_recipe_steps</string>
+    <string name="extra_recipe_ingredients">extra_recipe_ingredients</string>
+    <string name="extra_recipe">extra_recipe</string>
+    <string name="extra_step_index">extra_step_index</string>
+    <string name="saved_index">saved_index</string>
+    <string name="first_launch">first_launch</string>
 </resources>

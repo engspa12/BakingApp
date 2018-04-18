@@ -65,9 +65,6 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.Lis
             LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
             recipesList.setLayoutManager(linearLayoutManager);
 
-            if(savedInstanceState == null) {
-
-            }
 
         } else{
             mTabletMode = true;
@@ -91,10 +88,12 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.Lis
     public void getDataFromHttpUrlUsingJSON(String url){
 
 
-            listOfRecipes.clear();
+        listOfRecipes.clear();
+
         if (mRequestQueue != null) {
             mRequestQueue.cancelAll(TAG);
         }
+
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest
                 (Request.Method.GET, url, null, new Response.Listener<JSONArray>() {
 
@@ -182,20 +181,19 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.Lis
         //ArrayList<RecipeIngredient> ingredients = (ArrayList<RecipeIngredient>) listOfRecipes.get(clickedItemIndex).getmRecipeIngredients();
         //ArrayList<RecipeStep> steps = (ArrayList<RecipeStep>) listOfRecipes.get(clickedItemIndex).getmRecipeSteps();
         //Parcelable recipe = listOfRecipes.get(clickedItemIndex);
-        intent.putExtra("extra_recipe_ingredients",(ArrayList<RecipeIngredient>) listOfRecipes.get(clickedItemIndex).getmRecipeIngredients());
-        intent.putExtra("extra_recipe_steps",(ArrayList<RecipeStep>) listOfRecipes.get(clickedItemIndex).getmRecipeSteps());
-        intent.putExtra("extra_recipe",listOfRecipes.get(clickedItemIndex));
+        intent.putExtra(getString(R.string.extra_recipe_ingredients),(ArrayList<RecipeIngredient>) listOfRecipes.get(clickedItemIndex).getmRecipeIngredients());
+        intent.putExtra(getString(R.string.extra_recipe_steps),(ArrayList<RecipeStep>) listOfRecipes.get(clickedItemIndex).getmRecipeSteps());
+        intent.putExtra(getString(R.string.extra_recipe),listOfRecipes.get(clickedItemIndex));
         startActivity(intent);
     }
 
     private int numberOfColumns() {
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        // You can change this divider to adjust the size of the poster
         int widthDivider = 400;
         int width = displayMetrics.widthPixels;
         int nColumns = width / widthDivider;
-        if (nColumns < 2) return 2; //to keep the grid aspect
+        if (nColumns < 2) return 2;
         return nColumns;
     }
 }

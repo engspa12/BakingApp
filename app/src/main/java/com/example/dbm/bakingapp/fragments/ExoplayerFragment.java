@@ -53,7 +53,6 @@ public class ExoplayerFragment extends Fragment implements ExoPlayer.EventListen
     private static final String PLAYER_POSITION = "player_position";
     private static final String PLAYER_STATE = "player_state";
 
-    //private static final String TEST_URL = "https://d17h27t6h515a5.cloudfront.net/topher/2017/April/58ffd974_-intro-creampie/-intro-creampie.mp4";
 
     private int mListStepIndex;
 
@@ -79,7 +78,7 @@ public class ExoplayerFragment extends Fragment implements ExoPlayer.EventListen
         View rootView = inflater.inflate(R.layout.fragment_exoplayer, container, false);
 
         noVideoTextView = (TextView) rootView.findViewById(R.id.no_video_text_view);
-        noVideoTextView.setText("THERE IS NO VIDEO OR IMAGE FOR THIS STEP, PLEASE FOLLOW INSTRUCTIONS BELOW");
+        noVideoTextView.setText(getString(R.string.no_video_or_image_message));
         noVideoTextView.setVisibility(View.GONE);
 
         emptyImageView = (ImageView) rootView.findViewById(R.id.empty_image_view);
@@ -137,10 +136,7 @@ public class ExoplayerFragment extends Fragment implements ExoPlayer.EventListen
         }
     }
 
-    /**
-     * Initialize ExoPlayer.
-     * @param mediaUri The URI of the sample to play.
-     */
+
     private void initializePlayer(Uri mediaUri) {
         if (mExoPlayer == null) {
             // Create an instance of the ExoPlayer.
@@ -153,7 +149,7 @@ public class ExoplayerFragment extends Fragment implements ExoPlayer.EventListen
             mExoPlayer.addListener(this);
 
             // Prepare the MediaSource.
-            String userAgent = Util.getUserAgent(getContext(), "BakingApp");
+            String userAgent = Util.getUserAgent(getContext(), getString(R.string.app_name));
             MediaSource mediaSource = new ExtractorMediaSource(mediaUri, new DefaultDataSourceFactory(
                     getContext(), userAgent), new DefaultExtractorsFactory(), null, null);
             if (mPosition != C.TIME_UNSET && mExoPlayer != null) {
@@ -195,7 +191,6 @@ public class ExoplayerFragment extends Fragment implements ExoPlayer.EventListen
     }
 
     private void releasePlayer() {
-        //mNotificationManager.cancelAll();
         if(mExoPlayer != null) {
             mExoPlayer.stop();
             mExoPlayer.release();
@@ -208,12 +203,8 @@ public class ExoplayerFragment extends Fragment implements ExoPlayer.EventListen
     public void onDestroy() {
         super.onDestroy();
         releasePlayer();
-        //mMediaSession.setActive(false);
     }
 
-    public void updatePlayer() {
-        releasePlayer();
-    }
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle currentState) {

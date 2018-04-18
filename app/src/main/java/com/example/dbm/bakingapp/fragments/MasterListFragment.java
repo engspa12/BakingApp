@@ -29,7 +29,6 @@ public class MasterListFragment extends Fragment implements MasterListAdapter.Li
 
     private boolean tabletModeEnabled;
 
-    //private Recipe mRecipe;
 
     OnClickRecipeListener mCallback;
 
@@ -42,15 +41,11 @@ public class MasterListFragment extends Fragment implements MasterListAdapter.Li
     public void onAttach(Context context) {
         super.onAttach(context);
 
-        // This makes sure that the host activity has implemented the callback interface
-        // If not, it throws an exception
         try {
             mCallback = (OnClickRecipeListener) context;
-            //tabletModeEnabled = getActivity().getIntent().getBooleanExtra("boolean_test",true);
-            //mRecipe = (Recipe) getActivity().getIntent().getParcelableExtra("extra_recipe");
-            mListSteps = getActivity().getIntent().getParcelableArrayListExtra("extra_recipe_steps");
-            mListIngredients = getActivity().getIntent().getParcelableArrayListExtra("extra_recipe_ingredients");
-            //Log.v(LOG,"list was OKAY");
+            mListSteps = getActivity().getIntent().getParcelableArrayListExtra(getString(R.string.extra_recipe_steps));
+            mListIngredients = getActivity().getIntent().getParcelableArrayListExtra(getString(R.string.extra_recipe_ingredients));
+
         } catch (ClassCastException e) {
             throw new ClassCastException(context.toString()
                     + " must implement OnClickRecipeListener");
@@ -68,13 +63,10 @@ public class MasterListFragment extends Fragment implements MasterListAdapter.Li
 
         RecyclerView recyclerViewRecipeIngredients = (RecyclerView) rootView.findViewById(R.id.recycler_view_recipe_steps);
 
-        //TextView ingredientsTextView = (TextView) rootView.findViewById(R.id.recipe_ingredients_tv);
-        //ingredientsTextView.setText(mListIngredients.toString());
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         recyclerViewRecipeIngredients.setLayoutManager(linearLayoutManager);
         recyclerViewRecipeIngredients.setHasFixedSize(true);
-        //recyclerViewRecipeIngredients.setNestedScrollingEnabled(false);
 
         MasterListAdapter mAdapter = new MasterListAdapter(mListSteps,mListSteps.size() + 1,this,getContext(),false,mListIngredients);
 

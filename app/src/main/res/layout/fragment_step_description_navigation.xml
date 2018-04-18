@@ -3,22 +3,33 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
     <TextView
+        tools:background="@color/colorAccent"
+        android:textColor="#FFFFFF"
+        android:textStyle="bold|italic"
+        android:textSize="18sp"
+        android:layout_weight="1"
         android:gravity="center"
         tools:text="Description"
         android:layout_margin="16dp"
         android:id="@+id/step_description"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="0dp" />
 
     <RelativeLayout
+        android:layout_weight="1"
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="0dp">
 
         <Button
+            android:textStyle="bold"
+            app:backgroundTint="#795548"
+            android:textColor="#FFFFFF"
+            android:backgroundTint="#795548"
             tools:text="Previous Step"
             android:layout_alignParentStart="true"
             android:layout_alignParentLeft="true"
@@ -28,6 +39,10 @@
             android:layout_height="wrap_content" />
 
         <Button
+            android:textStyle="bold"
+            app:backgroundTint="#795548"
+            android:textColor="#FFFFFF"
+            android:backgroundTint="#795548"
             tools:text="Next Step"
             android:layout_margin="10dp"
             android:layout_alignParentEnd="true"
