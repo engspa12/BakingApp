@@ -56,8 +56,6 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.Lis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
-
         if(findViewById(R.id.recycler_view_tablet) == null){
             mTabletMode = false;
             recipesList = (RecyclerView) findViewById(R.id.recycler_view_phone);
@@ -86,8 +84,6 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.Lis
     }
 
     public void getDataFromHttpUrlUsingJSON(String url){
-
-
         listOfRecipes.clear();
 
         if (mRequestQueue != null) {

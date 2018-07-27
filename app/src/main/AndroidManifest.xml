@@ -26,12 +26,35 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.dbm.bakingapp.MainActivity" />
         </activity>
-        <activity android:name=".StepDetailActivity"
+        <activity
+            android:name=".StepDetailActivity"
             android:parentActivityName=".RecipeDetailActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.dbm.bakingapp.RecipeDetailActivity" />
         </activity>
+
+        <activity android:name=".RecipeAppWidgetConfigure">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE"/>
+            </intent-filter>
+        </activity>
+
+        <receiver android:name=".RecipeWidgetProvider">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/recipe_widget_info" />
+        </receiver>
+
+        <provider
+            android:authorities="com.example.dbm.bakingapp"
+            android:name=".data.RecipeProvider"
+            android:exported="false"/>
+
     </application>
 
 </manifest>

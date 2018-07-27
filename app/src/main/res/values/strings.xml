@@ -10,4 +10,5 @@
     <string name="extra_step_index">extra_step_index</string>
     <string name="saved_index">saved_index</string>
     <string name="first_launch">first_launch</string>
+    <string name="configuration_title">Choose Recipe</string>
 </resources>

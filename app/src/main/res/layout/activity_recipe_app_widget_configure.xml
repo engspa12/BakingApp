@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".RecipeAppWidgetConfigure">
+
+    <TextView
+        android:layout_margin="8dp"
+        android:layout_weight="1"
+        android:background="#FF6381"
+        android:textStyle="bold|italic"
+        android:textColor="#FFFFFF"
+        android:gravity="center"
+        android:textSize="20sp"
+        android:text="Nutella Pie"
+        android:id="@+id/nutella_pie_tv"
+        android:layout_width="match_parent"
+        android:layout_height="0dp" />
+
+    <TextView
+        android:layout_margin="8dp"
+        android:layout_weight="1"
+        android:background="#FF6381"
+        android:textStyle="bold|italic"
+        android:textColor="#FFFFFF"
+        android:gravity="center"
+        android:textSize="20sp"
+        android:text="Brownies"
+        android:id="@+id/brownies_tv"
+        android:layout_width="match_parent"
+        android:layout_height="0dp" />
+
+
+    <TextView
+        android:layout_margin="8dp"
+        android:layout_weight="1"
+        android:background="#FF6381"
+        android:textStyle="bold|italic"
+        android:textColor="#FFFFFF"
+        android:gravity="center"
+        android:textSize="20sp"
+        android:text="Yellow Cake"
+        android:id="@+id/yellow_cake_tv"
+        android:layout_width="match_parent"
+        android:layout_height="0dp" />
+
+    <TextView
+        android:layout_margin="8dp"
+        android:layout_weight="1"
+        android:background="#FF6381"
+        android:textStyle="bold|italic"
+        android:textColor="#FFFFFF"
+        android:gravity="center"
+        android:textSize="20sp"
+        android:text="Cheesecake"
+        android:id="@+id/cheesecake_tv"
+        android:layout_width="match_parent"
+        android:layout_height="0dp" />
+
+</LinearLayout>

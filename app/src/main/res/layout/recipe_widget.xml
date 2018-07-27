@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="@dimen/widget_margin">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/widget_recipe_title"
+            android:textStyle="bold|italic"
+            android:gravity="center"
+            android:textColor="#FFFFFF"
+            android:text="DESSERT"
+            android:textSize="22sp"
+            android:background="#AF24F1"
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="0dp" />
+
+        <TextView
+            android:layout_weight="4"
+            android:id="@+id/widget_recipe_ingredients"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:background="#11ADAA"
+            android:gravity="start"
+            android:padding="8dp"
+            android:text="WIDGET"
+            android:textColor="#FFFFFF"
+            android:textSize="14sp"
+            android:textStyle="bold|italic" />
+    </LinearLayout>
+
+</FrameLayout>
