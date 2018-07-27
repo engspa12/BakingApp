@@ -35,6 +35,8 @@ import com.google.android.exoplayer2.trackselection.TrackSelector;
 import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,12 +51,15 @@ public class ExoplayerFragment extends Fragment implements ExoPlayer.EventListen
     private static final String STEPS_LIST_INDEX = "index";
 
     private static final String PLAYER_POSITION = "player_position";
+    private static final String PLAYER_STATE = "player_state";
 
     //private static final String TEST_URL = "https://d17h27t6h515a5.cloudfront.net/topher/2017/April/58ffd974_-intro-creampie/-intro-creampie.mp4";
 
     private int mListStepIndex;
 
     private List<RecipeStep> mListSteps;
+
+    private boolean mPlayerState;
 
     private String media;
 
@@ -74,7 +79,7 @@ public class ExoplayerFragment extends Fragment implements ExoPlayer.EventListen
         View rootView = inflater.inflate(R.layout.fragment_exoplayer, container, false);
 
         noVideoTextView = (TextView) rootView.findViewById(R.id.no_video_text_view);
-        noVideoTextView.setText("THERE IS NO VIDEO FOR THIS STEP, PLEASE FOLLOW INSTRUCTIONS BELOW");
+        noVideoTextView.setText("THERE IS NO VIDEO OR IMAGE FOR THIS STEP, PLEASE FOLLOW INSTRUCTIONS BELOW");
         noVideoTextView.setVisibility(View.GONE);
 
         emptyImageView = (ImageView) rootView.findViewById(R.id.empty_image_view);
@@ -82,6 +87,7 @@ public class ExoplayerFragment extends Fragment implements ExoPlayer.EventListen
 
         if(savedInstanceState != null){
             mPosition = savedInstanceState.getLong(PLAYER_POSITION);
+            mPlayerState = savedInstanceState.getBoolean(PLAYER_STATE);
         }
 
         mPlayerView = (SimpleExoPlayerView) rootView.findViewById(R.id.playerView);
@@ -99,9 +105,15 @@ public class ExoplayerFragment extends Fragment implements ExoPlayer.EventListen
         } else{
             if(mListSteps.get(mListStepIndex).getmStepThumbnailUrl().equals("")) {
                 emptyImageView.setVisibility(View.VISIBLE);
+                emptyImageView.setImageResource(R.drawable.read_below_image);
                 noVideoTextView.setVisibility(View.VISIBLE);
             } else{
-
+                Picasso.get()
+                        .load(mListSteps.get(mListStepIndex).getmStepThumbnailUrl())
+                        .placeholder(R.drawable.placeholder)
+                        .error(R.drawable.read_below_image)
+                        .into(emptyImageView);
+                emptyImageView.setVisibility(View.VISIBLE);
                 noVideoTextView.setVisibility(View.VISIBLE);
             }
         }
@@ -115,6 +127,14 @@ public class ExoplayerFragment extends Fragment implements ExoPlayer.EventListen
 
     public void setStepIndex(int index){
         mListStepIndex = index;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        if(mExoPlayer != null) {
+            mExoPlayer.setPlayWhenReady(mPlayerState);
+        }
     }
 
     /**
@@ -202,6 +222,7 @@ public class ExoplayerFragment extends Fragment implements ExoPlayer.EventListen
         currentState.putInt(STEPS_LIST_INDEX, mListStepIndex);
         if(mExoPlayer != null) {
             currentState.putLong(PLAYER_POSITION, mExoPlayer.getCurrentPosition());
+            currentState.putBoolean(PLAYER_STATE,mExoPlayer.getPlayWhenReady());
         }
     }
 

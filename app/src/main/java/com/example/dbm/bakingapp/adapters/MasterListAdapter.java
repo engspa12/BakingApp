@@ -86,7 +86,7 @@ public class MasterListAdapter extends RecyclerView.Adapter<MasterListAdapter.St
 
             if(listIndex == 0){
                 StringBuilder builder = new StringBuilder();
-                builder.append("Ingredients: " + "\n\n");
+                builder.append("INGREDIENTS: " + "\n\n");
 
                 for(int i=0;i<listOfIngredients.size();i++){
                     if(listOfIngredients.get(i).getmIngredientMeasure().equals("UNIT")){
