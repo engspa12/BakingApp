@@ -36,6 +36,7 @@
                 android:padding="16dp"
                 tools:context="com.example.dbm.bakingapp.StepDetailActivity">
 
+                <!--This is a fragment container-->
                 <FrameLayout
                     android:id="@+id/exoplayer_container"
                     android:layout_width="match_parent"
@@ -44,6 +45,7 @@
                     android:background="#FFFFFF"
                     android:scaleType="fitXY" />
 
+                <!--This is a fragment container-->
                 <FrameLayout
                     android:id="@+id/step_description_navigation_container"
                     android:layout_width="match_parent"
