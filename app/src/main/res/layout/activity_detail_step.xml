@@ -13,10 +13,12 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <FrameLayout android:id="@+id/exoplayer_container"
+        <FrameLayout
+            android:background="#000000"
+            android:id="@+id/exoplayer_container"
             android:layout_width="match_parent"
-            android:layout_height="180dp"
-            android:scaleType="centerInside"/>
+            android:layout_height="200dp"
+            android:scaleType="fitXY"/>
 
         <FrameLayout android:id="@+id/step_instruction_navigation_container"
             android:layout_width="match_parent"

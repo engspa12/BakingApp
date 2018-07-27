@@ -34,6 +34,10 @@ public class StepDescriptionNavigationFragment extends Fragment {
 
     private TextView stepDescriptionTV;
 
+    //public interface buttonChange{
+    //
+    //}
+
     public StepDescriptionNavigationFragment(){}
 
     @Nullable

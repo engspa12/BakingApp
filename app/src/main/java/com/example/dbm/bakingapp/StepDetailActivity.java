@@ -2,11 +2,11 @@ package com.example.dbm.bakingapp;
 
 import android.content.Intent;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.media.session.PlaybackStateCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
-
 import com.example.dbm.bakingapp.classes.RecipeStep;
 import com.example.dbm.bakingapp.fragments.ExoplayerFragment;
 import com.example.dbm.bakingapp.fragments.StepDescriptionNavigationFragment;
