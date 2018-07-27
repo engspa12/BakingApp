@@ -55,17 +55,17 @@ public class MasterListFragment extends Fragment implements MasterListAdapter.Li
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        final View rootView = inflater.inflate(R.layout.fragment_master_list,container,false);
+        final View rootView = inflater.inflate(R.layout.fragment_master_list, container, false);
 
         RecyclerView recyclerViewRecipeIngredients = (RecyclerView) rootView.findViewById(R.id.recycler_view_recipe_steps);
 
-            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
-            recyclerViewRecipeIngredients.setLayoutManager(linearLayoutManager);
-            recyclerViewRecipeIngredients.setHasFixedSize(true);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+        recyclerViewRecipeIngredients.setLayoutManager(linearLayoutManager);
+        recyclerViewRecipeIngredients.setHasFixedSize(true);
 
-            MasterListAdapter mAdapter = new MasterListAdapter(mListSteps, mListSteps.size() + 1, this, getContext(), mListIngredients);
+        MasterListAdapter mAdapter = new MasterListAdapter(mListSteps, mListSteps.size() + 1, this, getContext(), mListIngredients);
 
-            recyclerViewRecipeIngredients.setAdapter(mAdapter);
+        recyclerViewRecipeIngredients.setAdapter(mAdapter);
 
 
         return rootView;
@@ -76,7 +76,7 @@ public class MasterListFragment extends Fragment implements MasterListAdapter.Li
         mCallback.onRecipeClicked(clickedItemIndex);
     }
 
-    public void setmListSteps(List<RecipeStep> list){
+    public void setmListSteps(List<RecipeStep> list) {
         mListSteps = list;
     }
 
