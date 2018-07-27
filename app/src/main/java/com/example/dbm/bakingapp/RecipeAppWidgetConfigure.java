@@ -1,6 +1,5 @@
 package com.example.dbm.bakingapp;
 
-import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
 import android.content.ContentUris;
@@ -8,12 +7,14 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.RemoteViews;
 import android.widget.TextView;
 
@@ -23,16 +24,18 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
-import com.example.dbm.bakingapp.adapters.RecipeAdapter;
 import com.example.dbm.bakingapp.classes.Recipe;
 import com.example.dbm.bakingapp.classes.RecipeIngredient;
 import com.example.dbm.bakingapp.classes.RecipeStep;
 import com.example.dbm.bakingapp.data.RecipeContract;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.reflect.Type;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -42,12 +45,15 @@ public class RecipeAppWidgetConfigure extends AppCompatActivity {
 
     private int mAppWidgetId;
 
-
     private TextView nutellaPieTV;
     private TextView browniesTV;
     private TextView yellowCake;
     private TextView cheesecake;
 
+    private TextView emptyTextViewWidgetConfiguration;
+
+    private FrameLayout widgetConfigurationContainer;
+    
     private static final int NUTELLA_PIE_CHOICE = 0;
     private static final int BROWNIES_CHOICE = 1;
     private static final int YELLOW_CAKE_CHOICE = 2;
@@ -84,52 +90,61 @@ public class RecipeAppWidgetConfigure extends AppCompatActivity {
                     AppWidgetManager.INVALID_APPWIDGET_ID);
         }
 
-        mRequestQueue = Volley.newRequestQueue(this);
-        mUri = RecipeContract.RecipeEntry.CONTENT_URI;
-        listOfRecipes = new ArrayList<>();
-        getRecipesData();
+        emptyTextViewWidgetConfiguration = (TextView) findViewById(R.id.empty_text_view_widget_configuration);
+        widgetConfigurationContainer = (FrameLayout) findViewById(R.id.widget_configuration_container);
 
-        nutellaPieTV = (TextView) findViewById(R.id.nutella_pie_tv);
-        nutellaPieTV.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                saveRecipeInDatabase(NUTELLA_PIE_CHOICE);
-                endConfiguration(NUTELLA_PIE_CHOICE);
-            }
-        });
-        nutellaPieTV.setVisibility(View.GONE);
+        if(isOnline()) {
+            emptyTextViewWidgetConfiguration.setVisibility(View.GONE);
+            widgetConfigurationContainer.setVisibility(View.VISIBLE);
+            mRequestQueue = Volley.newRequestQueue(this);
+            mUri = RecipeContract.RecipeEntry.CONTENT_URI;
+            listOfRecipes = new ArrayList<>();
+            getRecipesData();
 
-        browniesTV = (TextView) findViewById(R.id.brownies_tv);
-        browniesTV.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                saveRecipeInDatabase(BROWNIES_CHOICE);
-                endConfiguration(BROWNIES_CHOICE);
-            }
-        });
-        browniesTV.setVisibility(View.GONE);
+            nutellaPieTV = (TextView) findViewById(R.id.nutella_pie_tv);
+            nutellaPieTV.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    saveRecipeInDatabase(NUTELLA_PIE_CHOICE);
+                    endConfiguration(NUTELLA_PIE_CHOICE);
+                }
+            });
+            nutellaPieTV.setVisibility(View.GONE);
 
-        yellowCake = (TextView) findViewById(R.id.yellow_cake_tv);
-        yellowCake.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                saveRecipeInDatabase(YELLOW_CAKE_CHOICE);
-                endConfiguration(YELLOW_CAKE_CHOICE);
-            }
-        });
-        yellowCake.setVisibility(View.GONE);
+            browniesTV = (TextView) findViewById(R.id.brownies_tv);
+            browniesTV.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    saveRecipeInDatabase(BROWNIES_CHOICE);
+                    endConfiguration(BROWNIES_CHOICE);
+                }
+            });
+            browniesTV.setVisibility(View.GONE);
 
-        cheesecake = (TextView) findViewById(R.id.cheesecake_tv);
-        cheesecake.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                saveRecipeInDatabase(CHEESECAKE_CHOICE);
-                endConfiguration(CHEESECAKE_CHOICE);
-            }
-        });
-        cheesecake.setVisibility(View.GONE);
+            yellowCake = (TextView) findViewById(R.id.yellow_cake_tv);
+            yellowCake.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    saveRecipeInDatabase(YELLOW_CAKE_CHOICE);
+                    endConfiguration(YELLOW_CAKE_CHOICE);
+                }
+            });
+            yellowCake.setVisibility(View.GONE);
 
-
+            cheesecake = (TextView) findViewById(R.id.cheesecake_tv);
+            cheesecake.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    saveRecipeInDatabase(CHEESECAKE_CHOICE);
+                    endConfiguration(CHEESECAKE_CHOICE);
+                }
+            });
+            cheesecake.setVisibility(View.GONE);
+        } else {
+            widgetConfigurationContainer.setVisibility(View.GONE);
+            emptyTextViewWidgetConfiguration.setVisibility(View.VISIBLE);
+            emptyTextViewWidgetConfiguration.setText(getString(R.string.no_internet_connection_message));
+        }
     }
 
     public void saveRecipeInDatabase(int recipeChoice){
@@ -138,7 +153,7 @@ public class RecipeAppWidgetConfigure extends AppCompatActivity {
         values.put(RecipeContract.RecipeEntry.COLUMN_RECIPE_CHOICE, recipeChoice);
         values.put(RecipeContract.RecipeEntry.COLUMN_RECIPE_NAME, listOfRecipes.get(recipeChoice).getmRecipeName());
         values.put(RecipeContract.RecipeEntry.COLUMN_RECIPE_INGREDIENTS,
-                getIngredientsDetails(listOfRecipes.get(recipeChoice).getmRecipeIngredients()));
+               getIngredientsStringToStore((ArrayList<String>) getIngredientsStringList(listOfRecipes.get(recipeChoice).getmRecipeIngredients())));
 
         getContentResolver().insert(mUri,values);
     }
@@ -147,21 +162,24 @@ public class RecipeAppWidgetConfigure extends AppCompatActivity {
 
         AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this);
 
-        //Intent intentForPending = new Intent(this, RecipeDetailActivity.class);
-        //intentForPending.putExtra(getString(R.string.extra_recipe_ingredients),(ArrayList<RecipeIngredient>) listOfRecipes.get(recipeChoice).getmRecipeIngredients());
-        //intentForPending.putExtra(getString(R.string.extra_recipe_steps),(ArrayList<RecipeStep>) listOfRecipes.get(recipeChoice).getmRecipeSteps());
-        //intentForPending.putExtra(getString(R.string.extra_recipe),listOfRecipes.get(recipeChoice));
-        //intentForPending.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-        //PendingIntent pendingIntent = PendingIntent.getActivity(this, recipeChoice, intentForPending, PendingIntent.FLAG_UPDATE_CURRENT);
-
-        RemoteViews views = new RemoteViews(this.getPackageName(),
+        RemoteViews remoteViews = new RemoteViews(this.getPackageName(),
                 R.layout.recipe_widget);
-        views.setTextViewText(R.id.widget_recipe_ingredients,getIngredientsDetails(listOfRecipes.get(recipeChoice).getmRecipeIngredients()));
-        views.setTextViewText(R.id.widget_recipe_title,listOfRecipes.get(recipeChoice).getmRecipeName());
-        //views.setOnClickPendingIntent(R.id.widget_recipe_title,pendingIntent);
-        //views.setOnClickPendingIntent(R.id.widget_recipe_ingredients, pendingIntent);
 
-        appWidgetManager.updateAppWidget(mAppWidgetId, views);
+        remoteViews.setTextViewText(R.id.widget_recipe_title,listOfRecipes.get(recipeChoice).getmRecipeName());
+
+        Intent svcIntent = new Intent(this, WidgetService.class);
+
+        svcIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, mAppWidgetId);
+        svcIntent.putExtra("Ingredients_List",
+                (ArrayList<String>) getIngredientsStringList(listOfRecipes.get(recipeChoice).getmRecipeIngredients()));
+
+        svcIntent.setData(Uri.parse(
+                svcIntent.toUri(Intent.URI_INTENT_SCHEME)));
+
+        remoteViews.setRemoteAdapter(mAppWidgetId, R.id.listViewWidget,
+                svcIntent);
+
+        appWidgetManager.updateAppWidget(mAppWidgetId, remoteViews);
 
         Intent resultValue = new Intent();
         resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, mAppWidgetId);
@@ -232,7 +250,6 @@ public class RecipeAppWidgetConfigure extends AppCompatActivity {
                             browniesTV.setVisibility(View.VISIBLE);
                             yellowCake.setVisibility(View.VISIBLE);
                             cheesecake.setVisibility(View.VISIBLE);
-                            //return listOfRecipes;
 
                         } catch( JSONException e){
                             Log.e(LOG,e.getMessage());
@@ -251,44 +268,54 @@ public class RecipeAppWidgetConfigure extends AppCompatActivity {
         mRequestQueue.add(jsonArrayRequest);
     }
 
-    public String getIngredientsDetails(List<RecipeIngredient> listOfIngredients){
 
-        StringBuilder builder = new StringBuilder();
-        builder.append("INGREDIENTS: " + "\n\n");
+    public List<String> getIngredientsStringList(List<RecipeIngredient> listOfIngredients){
+
+        List<String> list = new ArrayList<>();
 
         for(int i=0;i<listOfIngredients.size();i++){
             if(listOfIngredients.get(i).getmIngredientMeasure().equals("UNIT")){
-                builder.append("- " + getCorrectValue(listOfIngredients.get(i).getmIngredientQuantity()) + " "
-                        + listOfIngredients.get(i).getmIngredientName() + "\n");
+                list.add("- " + getCorrectValue(listOfIngredients.get(i).getmIngredientQuantity()) + " "
+                        + listOfIngredients.get(i).getmIngredientName());
             } else if(listOfIngredients.get(i).getmIngredientMeasure().equals("TSP")){
-                builder.append("- " + getCorrectValue(listOfIngredients.get(i).getmIngredientQuantity()) + " teaspoons of "
-                        + listOfIngredients.get(i).getmIngredientName() + "\n");
+                list.add("- " + getCorrectValue(listOfIngredients.get(i).getmIngredientQuantity()) + " teaspoons of "
+                        + listOfIngredients.get(i).getmIngredientName());
             } else if(listOfIngredients.get(i).getmIngredientMeasure().equals("TBLSP")){
-                builder.append("- " + getCorrectValue(listOfIngredients.get(i).getmIngredientQuantity()) + " tablespoons of "
-                        + listOfIngredients.get(i).getmIngredientName() + "\n");
+                list.add("- " + getCorrectValue(listOfIngredients.get(i).getmIngredientQuantity()) + " tablespoons of "
+                        + listOfIngredients.get(i).getmIngredientName());
             } else if(listOfIngredients.get(i).getmIngredientMeasure().equals("CUPS")){
-                builder.append("- " + getCorrectValue(listOfIngredients.get(i).getmIngredientQuantity()) + " cups of "
-                        + listOfIngredients.get(i).getmIngredientName() + "\n");
+                list.add("- " + getCorrectValue(listOfIngredients.get(i).getmIngredientQuantity()) + " cups of "
+                        + listOfIngredients.get(i).getmIngredientName());
             } else if(listOfIngredients.get(i).getmIngredientMeasure().equals("OZ")){
-                builder.append("- " + getCorrectValue(listOfIngredients.get(i).getmIngredientQuantity()) + " ounces of "
-                        + listOfIngredients.get(i).getmIngredientName() + "\n");
+                list.add("- " + getCorrectValue(listOfIngredients.get(i).getmIngredientQuantity()) + " ounces of "
+                        + listOfIngredients.get(i).getmIngredientName());
             } else if(listOfIngredients.get(i).getmIngredientMeasure().equals("K")){
-                builder.append("- " + getCorrectValue(listOfIngredients.get(i).getmIngredientQuantity()) + " kilograms of "
-                        + listOfIngredients.get(i).getmIngredientName() + "\n");
+                list.add("- " + getCorrectValue(listOfIngredients.get(i).getmIngredientQuantity()) + " kilograms of "
+                        + listOfIngredients.get(i).getmIngredientName());
             } else if(listOfIngredients.get(i).getmIngredientMeasure().equals("G")){
-                builder.append("- " + getCorrectValue(listOfIngredients.get(i).getmIngredientQuantity()) + " grams of "
-                        + listOfIngredients.get(i).getmIngredientName() + "\n");
+                list.add("- " + getCorrectValue(listOfIngredients.get(i).getmIngredientQuantity()) + " grams of "
+                        + listOfIngredients.get(i).getmIngredientName());
             } else if(listOfIngredients.get(i).getmIngredientMeasure().equals("CUP")){
-                builder.append("- " + getCorrectValue(listOfIngredients.get(i).getmIngredientQuantity()) + " cups of "
-                        + listOfIngredients.get(i).getmIngredientName() + "\n");
+                list.add("- " + getCorrectValue(listOfIngredients.get(i).getmIngredientQuantity()) + " cups of "
+                        + listOfIngredients.get(i).getmIngredientName());
             } else{
-                builder.append("- " + getCorrectValue(listOfIngredients.get(i).getmIngredientQuantity()) + " "
+                list.add("- " + getCorrectValue(listOfIngredients.get(i).getmIngredientQuantity()) + " "
                         + listOfIngredients.get(i).getmIngredientMeasure() + " of " + listOfIngredients.get(i).getmIngredientName() + "\n");
             }
         }
 
-        return builder.toString();
+        return list;
 
+    }
+
+    public String getIngredientsStringToStore(ArrayList<String> ingredientsList){
+
+        //Convert ArrayList<String> to a String using GSON library
+        //Each ingredient is a String
+        Gson gson = new Gson();
+        String inputString = gson.toJson(ingredientsList);
+
+        return inputString;
     }
 
     public String getCorrectValue(double input){
@@ -305,7 +332,9 @@ public class RecipeAppWidgetConfigure extends AppCompatActivity {
                 RecipeContract.RecipeEntry.COLUMN_RECIPE_NAME,
                 RecipeContract.RecipeEntry.COLUMN_RECIPE_INGREDIENTS};
 
-        Uri wantedUri = null;
+        Uri wantedUri;
+
+        Gson gson = new Gson();
 
         AppWidgetManager manager = AppWidgetManager.getInstance(context);
         int[] appWidgetIds = manager.getAppWidgetIds(new ComponentName(context, RecipeWidgetProvider.class));
@@ -318,25 +347,53 @@ public class RecipeAppWidgetConfigure extends AppCompatActivity {
                 if (cursor.getCount() != 0) {
                     cursor.moveToFirst();
 
+                    //Retrieve the ArrayList<String>
+                    Type type = new TypeToken<ArrayList<String>>() {}.getType();
+                    String output = cursor.getString(cursor.getColumnIndex(RecipeContract.RecipeEntry.COLUMN_RECIPE_INGREDIENTS));
+                    ArrayList<String> finalOutputString = gson.fromJson(output, type);
+
                     RemoteViews views = new RemoteViews(context.getPackageName(),
                             R.layout.recipe_widget);
-                    views.setTextViewText(R.id.widget_recipe_ingredients,cursor.getString(cursor.getColumnIndex(RecipeContract.RecipeEntry.COLUMN_RECIPE_INGREDIENTS)));
+                    //Set Recipe name in Widget
                     views.setTextViewText(R.id.widget_recipe_title,cursor.getString(cursor.getColumnIndex(RecipeContract.RecipeEntry.COLUMN_RECIPE_NAME)));
+
+                    Intent svcIntent = new Intent(context, WidgetService.class);
+
+                    svcIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetIds[i]);
+                    svcIntent.putExtra("Ingredients_List",finalOutputString);
+
+                    svcIntent.setData(Uri.parse(
+                            svcIntent.toUri(Intent.URI_INTENT_SCHEME)));
+
+                    //Set RemoteAdapter for ListView
+                    views.setRemoteAdapter(appWidgetIds[i], R.id.listViewWidget,
+                            svcIntent);
 
                     manager.updateAppWidget(appWidgetIds[i], views);
 
                 }
             }
+            cursor.close();
         }
     }
 
     public static void deleteWidgets(Context context, int[] widgetsDeleted){
 
-        Uri wantedUri = null;
+        Uri wantedUri;
 
-        for(int i=0;i<widgetsDeleted.length;i++){
-            wantedUri = ContentUris.withAppendedId(RecipeContract.RecipeEntry.CONTENT_URI,widgetsDeleted[i]);
-            context.getContentResolver().delete(wantedUri,null,null);
+        if(widgetsDeleted.length != 0) {
+
+            for (int i = 0; i < widgetsDeleted.length; i++) {
+                wantedUri = ContentUris.withAppendedId(RecipeContract.RecipeEntry.CONTENT_URI, widgetsDeleted[i]);
+                context.getContentResolver().delete(wantedUri, null, null);
+            }
         }
+    }
+
+    public boolean isOnline() {
+        ConnectivityManager cm =
+                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        return netInfo != null && netInfo.isConnected();
     }
 }

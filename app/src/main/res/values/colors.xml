@@ -4,6 +4,7 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
     <color name="colorRecipeIngredients">#009688</color>
-    <color name="colorRecipeSteps">#AB47BC</color>
+    <color name="colorRecipeSteps">#9575CD</color>
     <color name="colorRecipe">#558B2F</color>
+    <color name="colorStepNumber">#0066FF</color>
 </resources>

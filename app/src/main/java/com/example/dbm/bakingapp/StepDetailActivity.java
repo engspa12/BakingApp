@@ -1,18 +1,19 @@
 package com.example.dbm.bakingapp;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.content.LocalBroadcastManager;
-import android.support.v4.media.session.PlaybackStateCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
+import android.widget.FrameLayout;
+import android.widget.TextView;
 
 import com.example.dbm.bakingapp.classes.Recipe;
 import com.example.dbm.bakingapp.classes.RecipeStep;
@@ -35,17 +36,24 @@ public class StepDetailActivity extends AppCompatActivity implements StepDescrip
 
     private FragmentManager fragmentManager;
 
+    private FrameLayout exoplayerFrameLayout;
+    private FrameLayout navigationFrameLayout;
+
     private boolean screenRotated;
 
     private boolean firstLaunch;
 
     private Recipe mRecipe;
 
+    private TextView emptyTextViewStepDetail;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail_step);
+
+        emptyTextViewStepDetail = (TextView) findViewById(R.id.empty_text_view_step_detail);
 
         firstLaunch = true;
 
@@ -63,25 +71,25 @@ public class StepDetailActivity extends AppCompatActivity implements StepDescrip
 
     public void checkFragments() {
 
-            if (screenRotated) {
-                if (!firstLaunch) {
-                    View decorView = getWindow().getDecorView();
-                    int uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN;
-                    decorView.setSystemUiVisibility(uiOptions);
-                    ab = getSupportActionBar();
-                    ab.hide();
-                } else {
-                    buildFragments();
-                    firstLaunch = false;
-                }
+        if (screenRotated) {
+            if (!firstLaunch) {
+                View decorView = getWindow().getDecorView();
+                int uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN;
+                decorView.setSystemUiVisibility(uiOptions);
+                ab = getSupportActionBar();
+                ab.hide();
             } else {
                 buildFragments();
                 firstLaunch = false;
             }
+        } else {
+            buildFragments();
+            firstLaunch = false;
+        }
 
     }
 
-    public void buildFragments(){
+    public void buildFragments() {
 
         if (findViewById(R.id.step_description_navigation_container) != null) {
 
@@ -165,27 +173,65 @@ public class StepDetailActivity extends AppCompatActivity implements StepDescrip
         super.onResume();
 
         int orientation = getResources().getConfiguration().orientation;
-        if(orientation == Configuration.ORIENTATION_PORTRAIT){
+        if (orientation == Configuration.ORIENTATION_PORTRAIT) {
             screenRotated = false;
-        } else if(orientation == Configuration.ORIENTATION_LANDSCAPE){
+        } else if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
             screenRotated = true;
         }
-        checkFragments();
-        // THE FRAGMENT IS GENERATED TWICE, you are calling generateFragments() after onCreateView in ExoplayerFragment
+
+        exoplayerFrameLayout = (FrameLayout) findViewById(R.id.exoplayer_container);
+
+
+        if (findViewById(R.id.step_description_navigation_container) != null) {
+            navigationFrameLayout = (FrameLayout) findViewById(R.id.step_description_navigation_container);
+            if (isOnline()) {
+                exoplayerFrameLayout.setVisibility(View.VISIBLE);
+                navigationFrameLayout.setVisibility(View.VISIBLE);
+                emptyTextViewStepDetail.setVisibility(View.GONE);
+                checkFragments();
+            } else {
+                exoplayerFrameLayout.setVisibility(View.GONE);
+                navigationFrameLayout.setVisibility(View.GONE);
+                emptyTextViewStepDetail.setVisibility(View.VISIBLE);
+                emptyTextViewStepDetail.setText(getString(R.string.no_internet_connection_message));
+            }
+        } else {
+            if (isOnline()) {
+                exoplayerFrameLayout.setVisibility(View.VISIBLE);
+                emptyTextViewStepDetail.setVisibility(View.GONE);
+                checkFragments();
+            } else {
+                exoplayerFrameLayout.setVisibility(View.GONE);
+                emptyTextViewStepDetail.setVisibility(View.VISIBLE);
+                emptyTextViewStepDetail.setText(getString(R.string.no_internet_connection_message));
+            }
+        }
     }
 
     @Override
     public void onButtonClicked(int index) {
 
-        exoplayerFragment = new ExoplayerFragment();
-        exoplayerFragment.setStepsList(mListSteps);
-        exoplayerFragment.setStepIndex(index);
+        if (isOnline()) {
+            navigationFrameLayout.setVisibility(View.VISIBLE);
+            exoplayerFrameLayout.setVisibility(View.VISIBLE);
+            exoplayerFragment = new ExoplayerFragment();
+            emptyTextViewStepDetail.setVisibility(View.GONE);
 
-        fragmentManager.beginTransaction()
-                .replace(R.id.exoplayer_container, exoplayerFragment)
-                .commit();
+            exoplayerFragment.setStepsList(mListSteps);
+            exoplayerFragment.setStepIndex(index);
 
-        mStepListIndex = index;
+            fragmentManager.beginTransaction()
+                    .replace(R.id.exoplayer_container, exoplayerFragment)
+                    .commit();
+
+            mStepListIndex = index;
+        } else {
+            emptyTextViewStepDetail.setText(getString(R.string.no_internet_connection_message));
+            emptyTextViewStepDetail.setVisibility(View.VISIBLE);
+            navigationFrameLayout.setVisibility(View.GONE);
+            exoplayerFrameLayout.setVisibility(View.GONE);
+        }
+
     }
 
     @Override
@@ -207,8 +253,15 @@ public class StepDetailActivity extends AppCompatActivity implements StepDescrip
     @Override
     public void onBackPressed() {
         Intent intent = new Intent();
-        intent.putExtra(STEP_INDEX,mStepListIndex);
-        setResult(Activity.RESULT_OK,intent);
+        intent.putExtra(STEP_INDEX, mStepListIndex);
+        setResult(Activity.RESULT_OK, intent);
         super.onBackPressed();
+    }
+
+    public boolean isOnline() {
+        ConnectivityManager cm =
+                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        return netInfo != null && netInfo.isConnected();
     }
 }

@@ -1,20 +1,20 @@
 package com.example.dbm.bakingapp;
 
 import android.app.Activity;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
-import android.support.v4.app.Fragment;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.NavUtils;
 import android.support.v4.app.TaskStackBuilder;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.FrameLayout;
+import android.widget.TextView;
 
 import com.example.dbm.bakingapp.classes.Recipe;
 import com.example.dbm.bakingapp.classes.RecipeIngredient;
@@ -40,9 +40,15 @@ public class RecipeDetailActivity extends AppCompatActivity implements MasterLis
 
     private static final String STEP_INDEX = "step_index";
 
+    private boolean firstLaunch;
+
     private boolean mTabletMode;
 
     private List<RecipeIngredient> mListIngredients;
+
+    private FrameLayout mainFrameLayout;
+
+    private TextView emptyTextViewRecipeDetail;
 
     private FragmentManager fragmentManager;
 
@@ -51,8 +57,12 @@ public class RecipeDetailActivity extends AppCompatActivity implements MasterLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail_recipe);
 
+        emptyTextViewRecipeDetail = (TextView) findViewById(R.id.empty_text_view_recipe_detail);
+
         ActionBar ab = getSupportActionBar();
         ab.setDisplayHomeAsUpEnabled(true);
+
+        firstLaunch = true;
 
         fragmentManager = getSupportFragmentManager();
 
@@ -77,18 +87,26 @@ public class RecipeDetailActivity extends AppCompatActivity implements MasterLis
 
     @Override
     public void onRecipeClicked(int position) {
-        mIndex = position - 1;
-        if(!mTabletMode) {
-            if (position > 0) {
-                Intent intent = new Intent(RecipeDetailActivity.this, StepDetailActivity.class);
-                intent.putExtra(getString(R.string.extra_step_index), position - 1);
-                intent.putExtra(getString(R.string.extra_recipe_steps), (ArrayList<RecipeStep>) mListSteps);
-                intent.putExtra(getString(R.string.extra_recipe),mRecipe);
-                startActivityForResult(intent,REQUEST_CODE);
+            mIndex = position - 1;
+            if (!mTabletMode) {
+                if (position > 0) {
+                    Intent intent = new Intent(RecipeDetailActivity.this, StepDetailActivity.class);
+                    intent.putExtra(getString(R.string.extra_step_index), position - 1);
+                    intent.putExtra(getString(R.string.extra_recipe_steps), (ArrayList<RecipeStep>) mListSteps);
+                    intent.putExtra(getString(R.string.extra_recipe), mRecipe);
+                    startActivityForResult(intent, REQUEST_CODE);
+                }
+            } else {
+                if(isOnline()) {
+                    generateFragments(position - 1);
+                    mainFrameLayout.setVisibility(View.VISIBLE);
+                    emptyTextViewRecipeDetail.setVisibility(View.GONE);
+                } else{
+                    mainFrameLayout.setVisibility(View.GONE);
+                    emptyTextViewRecipeDetail.setVisibility(View.VISIBLE);
+                    emptyTextViewRecipeDetail.setText(getString(R.string.no_internet_connection_message));
+                }
             }
-        } else{
-            generateFragments(position - 1);
-        }
     }
 
     public void generateFragments(int index){
@@ -117,7 +135,6 @@ public class RecipeDetailActivity extends AppCompatActivity implements MasterLis
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                //onBackPressed();
                 Intent upIntent = NavUtils.getParentActivityIntent(this);
                 if (NavUtils.shouldUpRecreateTask(this, upIntent) || isTaskRoot()) {
                     // This activity is NOT part of this app's task, so create a new task
@@ -127,69 +144,69 @@ public class RecipeDetailActivity extends AppCompatActivity implements MasterLis
                             .addNextIntentWithParentStack(upIntent)
                             // Navigate up to the closest parent
                             .startActivities();
-                    //Log.v(LOG,"TASKSTACKBUILDER");
                 } else {
                     // This activity is part of this app's task, so simply
                     // navigate up to the logical parent activity.
                     NavUtils.navigateUpTo(this, upIntent);
-                    //Log.v(LOG,"NAVUTILS AND NAVIGATEUP");
                 }
                 return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-    }
-
 
     @Override
     protected void onResume() {
         super.onResume();
-        if(findViewById(R.id.step_detail_linear_layout) != null){
-            mTabletMode = true;
-            generateFragments(mIndex);
+
+        mainFrameLayout = (FrameLayout) findViewById(R.id.main_container);
+
+        if(isOnline()) {
+            if (findViewById(R.id.step_detail_linear_layout) != null) {
+                mTabletMode = true;
+                if(firstLaunch) {
+                    generateFragments(mIndex);
+                    firstLaunch = false;
+                }
+            } else {
+                mTabletMode = false;
+                mIndex = 0;
+            }
+            mainFrameLayout.setVisibility(View.VISIBLE);
+            emptyTextViewRecipeDetail.setVisibility(View.GONE);
         } else{
-            mTabletMode = false;
-            mIndex = 0;
+            mainFrameLayout.setVisibility(View.GONE);
+            emptyTextViewRecipeDetail.setVisibility(View.VISIBLE);
+            emptyTextViewRecipeDetail.setText(getString(R.string.no_internet_connection_message));
         }
     }
 
     @Override
     public void onButtonClicked(int index) {
-        mIndex = index;
-        ExoplayerFragment exoplayerFragment = new ExoplayerFragment();
+        if (isOnline()) {
+            mIndex = index;
+            mainFrameLayout.setVisibility(View.VISIBLE);
+            emptyTextViewRecipeDetail.setVisibility(View.GONE);
+            ExoplayerFragment exoplayerFragment = new ExoplayerFragment();
 
-        exoplayerFragment.setStepsList(mListSteps);
-        exoplayerFragment.setStepIndex(index);
+            exoplayerFragment.setStepsList(mListSteps);
+            exoplayerFragment.setStepIndex(index);
 
-        fragmentManager.beginTransaction()
-                .replace(R.id.exoplayer_container, exoplayerFragment)
-                .commit();
+            fragmentManager.beginTransaction()
+                    .replace(R.id.exoplayer_container, exoplayerFragment)
+                    .commit();
+        } else{
+            mainFrameLayout.setVisibility(View.GONE);
+            emptyTextViewRecipeDetail.setVisibility(View.VISIBLE);
+            emptyTextViewRecipeDetail.setText(getString(R.string.no_internet_connection_message));
+        }
     }
 
-    //@Override
-   // protected void onSaveInstanceState(Bundle outState) {
-   //     super.onSaveInstanceState(outState);
-   //     outState.putInt(STEP_INDEX,mIndex);
-   // }
-
-    //@Override
-    //protected void onRestoreInstanceState(Bundle savedInstanceState) {
-    //    super.onRestoreInstanceState(savedInstanceState);
-    //    mIndex = savedInstanceState.getInt(STEP_INDEX);
-    //}
+    public boolean isOnline() {
+        ConnectivityManager cm =
+                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        return netInfo != null && netInfo.isConnected();
+    }
 
 }

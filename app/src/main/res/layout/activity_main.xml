@@ -1,18 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
-    android:background="#CFD8DC"
+<FrameLayout android:background="#CFD8DC"
     android:layout_height="match_parent"
     android:layout_width="match_parent"
-    xmlns:android="http://schemas.android.com/apk/res/android" >
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/recycler_view_phone"
+        android:id="@+id/recycler_view_main"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clipToPadding="false"/>
 
     <TextView
-        android:id="@+id/empty_text_view"
+        android:gravity="center"
+        tools:text = "EMPTY TEXTVIEW"
+        android:id="@+id/empty_text_view_phone"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 

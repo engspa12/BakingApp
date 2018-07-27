@@ -1,14 +1,11 @@
 package com.example.dbm.bakingapp.fragments;
 
-import android.media.session.MediaSession;
-import android.media.session.PlaybackState;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.media.session.MediaSessionCompat;
-import android.support.v4.media.session.PlaybackStateCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,7 +32,6 @@ import com.google.android.exoplayer2.trackselection.TrackSelector;
 import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
-import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -67,9 +63,11 @@ public class ExoplayerFragment extends Fragment implements ExoPlayer.EventListen
     private ImageView emptyImageView;
     private TextView noVideoTextView;
 
+
     private static final String LOG = ExoplayerFragment.class.getSimpleName();
 
-    public ExoplayerFragment(){}
+    public ExoplayerFragment() {
+    }
 
     @Nullable
     @Override
@@ -77,36 +75,46 @@ public class ExoplayerFragment extends Fragment implements ExoPlayer.EventListen
 
         View rootView = inflater.inflate(R.layout.fragment_exoplayer, container, false);
 
-        noVideoTextView = (TextView) rootView.findViewById(R.id.no_video_text_view);
-        noVideoTextView.setText(getString(R.string.no_video_or_image_message));
-        noVideoTextView.setVisibility(View.GONE);
 
+        noVideoTextView = (TextView) rootView.findViewById(R.id.no_video_text_view);
         emptyImageView = (ImageView) rootView.findViewById(R.id.empty_image_view);
+        mPlayerView = (SimpleExoPlayerView) rootView.findViewById(R.id.playerView);
+
+
+        noVideoTextView.setText(getString(R.string.no_video_or_image_message));
+
+
+        noVideoTextView.setVisibility(View.GONE);
         emptyImageView.setVisibility(View.GONE);
 
-        if(savedInstanceState != null){
+
+        mPlayerState = false;
+
+        if (savedInstanceState != null) {
             mPosition = savedInstanceState.getLong(PLAYER_POSITION);
             mPlayerState = savedInstanceState.getBoolean(PLAYER_STATE);
         }
 
-        mPlayerView = (SimpleExoPlayerView) rootView.findViewById(R.id.playerView);
-
-        if(mListSteps != null) {
+        if (mListSteps != null) {
             media = mListSteps.get(mListStepIndex).getmStepVideoUrl();
-        } else{
+        } else {
             mListSteps = savedInstanceState.getParcelableArrayList(STEPS_LIST);
             mListStepIndex = savedInstanceState.getInt(STEPS_LIST_INDEX);
             media = mListSteps.get(mListStepIndex).getmStepVideoUrl();
         }
 
-        if (media != null && !(media.equals(""))){
+        return rootView;
+    }
+
+    public void checkVideoResources(){
+        if (media != null && !(media.equals(""))) {
             initializePlayer(Uri.parse(media));
-        } else{
-            if(mListSteps.get(mListStepIndex).getmStepThumbnailUrl().equals("")) {
+        } else {
+            if (mListSteps.get(mListStepIndex).getmStepThumbnailUrl().equals("")) {
                 emptyImageView.setVisibility(View.VISIBLE);
                 emptyImageView.setImageResource(R.drawable.read_below_image);
                 noVideoTextView.setVisibility(View.VISIBLE);
-            } else{
+            } else {
                 Picasso.get()
                         .load(mListSteps.get(mListStepIndex).getmStepThumbnailUrl())
                         .placeholder(R.drawable.placeholder)
@@ -116,24 +124,46 @@ public class ExoplayerFragment extends Fragment implements ExoPlayer.EventListen
                 noVideoTextView.setVisibility(View.VISIBLE);
             }
         }
-
-        return rootView;
     }
 
-    public void setStepsList(List<RecipeStep> list){
+    public void setStepsList(List<RecipeStep> list) {
         mListSteps = list;
     }
 
-    public void setStepIndex(int index){
+    public void setStepIndex(int index) {
         mListStepIndex = index;
     }
+
 
     @Override
     public void onStart() {
         super.onStart();
-        if(mExoPlayer != null) {
-            mExoPlayer.setPlayWhenReady(mPlayerState);
+        if (Util.SDK_INT > 23) {
+            checkVideoResources();
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if ((Util.SDK_INT <= 23 || mExoPlayer == null)) {
+            checkVideoResources();
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if(mExoPlayer != null) {
+            mPosition = mExoPlayer.getCurrentPosition();
+            mPlayerState = mExoPlayer.getPlayWhenReady();
+        }
+    }
+
+   @Override
+   public void onStop() {
+       super.onStop();
+            releasePlayer();
     }
 
 
@@ -156,7 +186,7 @@ public class ExoplayerFragment extends Fragment implements ExoPlayer.EventListen
                 mExoPlayer.seekTo(mPosition);
             }
             mExoPlayer.prepare(mediaSource);
-            mExoPlayer.setPlayWhenReady(true);
+            mExoPlayer.setPlayWhenReady(mPlayerState);
         }
     }
 
@@ -177,7 +207,6 @@ public class ExoplayerFragment extends Fragment implements ExoPlayer.EventListen
 
     @Override
     public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
-
     }
 
     @Override
@@ -191,7 +220,7 @@ public class ExoplayerFragment extends Fragment implements ExoPlayer.EventListen
     }
 
     private void releasePlayer() {
-        if(mExoPlayer != null) {
+        if (mExoPlayer != null) {
             mExoPlayer.stop();
             mExoPlayer.release();
             mExoPlayer = null;
@@ -200,20 +229,13 @@ public class ExoplayerFragment extends Fragment implements ExoPlayer.EventListen
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
-        releasePlayer();
-    }
-
-
-    @Override
     public void onSaveInstanceState(@NonNull Bundle currentState) {
         super.onSaveInstanceState(currentState);
         currentState.putParcelableArrayList(STEPS_LIST, (ArrayList<RecipeStep>) mListSteps);
         currentState.putInt(STEPS_LIST_INDEX, mListStepIndex);
-        if(mExoPlayer != null) {
+        if (mExoPlayer != null) {
             currentState.putLong(PLAYER_POSITION, mExoPlayer.getCurrentPosition());
-            currentState.putBoolean(PLAYER_STATE,mExoPlayer.getPlayWhenReady());
+            currentState.putBoolean(PLAYER_STATE, mExoPlayer.getPlayWhenReady());
         }
     }
 

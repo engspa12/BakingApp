@@ -2,6 +2,7 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_margin="@dimen/widget_margin">
 
     <LinearLayout
@@ -14,25 +15,22 @@
             android:textStyle="bold|italic"
             android:gravity="center"
             android:textColor="#FFFFFF"
-            android:text="DESSERT"
+            tools:text="@string/dessert_title"
             android:textSize="22sp"
             android:background="#AF24F1"
             android:layout_weight="1"
             android:layout_width="match_parent"
             android:layout_height="0dp" />
 
-        <TextView
-            android:layout_weight="4"
-            android:id="@+id/widget_recipe_ingredients"
+
+        <ListView
+            android:layout_weight="6"
+            android:background="#11ADAA"
+            android:id="@+id/listViewWidget"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:background="#11ADAA"
-            android:gravity="start"
-            android:padding="8dp"
-            android:text="WIDGET"
-            android:textColor="#FFFFFF"
-            android:textSize="14sp"
-            android:textStyle="bold|italic" />
+            android:divider="@null"
+            android:dividerHeight="0dp"/>
     </LinearLayout>
 
 </FrameLayout>

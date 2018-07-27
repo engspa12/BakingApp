@@ -26,9 +26,6 @@ public class MasterListFragment extends Fragment implements MasterListAdapter.Li
 
     private List<RecipeIngredient> mListIngredients;
 
-    private boolean tabletModeEnabled;
-
-
     OnClickRecipeListener mCallback;
 
     public interface OnClickRecipeListener {
@@ -62,14 +59,14 @@ public class MasterListFragment extends Fragment implements MasterListAdapter.Li
 
         RecyclerView recyclerViewRecipeIngredients = (RecyclerView) rootView.findViewById(R.id.recycler_view_recipe_steps);
 
+            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+            recyclerViewRecipeIngredients.setLayoutManager(linearLayoutManager);
+            recyclerViewRecipeIngredients.setHasFixedSize(true);
 
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
-        recyclerViewRecipeIngredients.setLayoutManager(linearLayoutManager);
-        recyclerViewRecipeIngredients.setHasFixedSize(true);
+            MasterListAdapter mAdapter = new MasterListAdapter(mListSteps, mListSteps.size() + 1, this, getContext(), mListIngredients);
 
-        MasterListAdapter mAdapter = new MasterListAdapter(mListSteps,mListSteps.size() + 1,this,getContext(),false,mListIngredients);
+            recyclerViewRecipeIngredients.setAdapter(mAdapter);
 
-        recyclerViewRecipeIngredients.setAdapter(mAdapter);
 
         return rootView;
     }
@@ -83,9 +80,6 @@ public class MasterListFragment extends Fragment implements MasterListAdapter.Li
         mListSteps = list;
     }
 
-    public void setTabletModeEnabled(boolean tabletMode){
-        tabletModeEnabled = tabletMode;
-    }
 
 }
 

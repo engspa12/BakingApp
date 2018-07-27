@@ -27,7 +27,6 @@
 
         <Button
             android:textStyle="bold"
-            app:backgroundTint="#795548"
             android:textColor="#FFFFFF"
             android:backgroundTint="#795548"
             tools:text="Previous Step"
@@ -40,7 +39,6 @@
 
         <Button
             android:textStyle="bold"
-            app:backgroundTint="#795548"
             android:textColor="#FFFFFF"
             android:backgroundTint="#795548"
             tools:text="Next Step"

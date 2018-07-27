@@ -1,63 +1,83 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".RecipeAppWidgetConfigure">
+    android:layout_height="match_parent">
+
+    <FrameLayout
+        android:id="@+id/widget_configuration_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            tools:context=".RecipeAppWidgetConfigure">
+
+            <TextView
+                android:id="@+id/nutella_pie_tv"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_margin="8dp"
+                android:layout_weight="1"
+                android:background="#FF6381"
+                android:gravity="center"
+                android:text="@string/nutella_pie"
+                android:textColor="#FFFFFF"
+                android:textSize="20sp"
+                android:textStyle="bold|italic" />
+
+            <TextView
+                android:id="@+id/brownies_tv"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_margin="8dp"
+                android:layout_weight="1"
+                android:background="#FF6381"
+                android:gravity="center"
+                android:text="@string/brownies"
+                android:textColor="#FFFFFF"
+                android:textSize="20sp"
+                android:textStyle="bold|italic" />
+
+
+            <TextView
+                android:id="@+id/yellow_cake_tv"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_margin="8dp"
+                android:layout_weight="1"
+                android:background="#FF6381"
+                android:gravity="center"
+                android:text="@string/yellow_cake"
+                android:textColor="#FFFFFF"
+                android:textSize="20sp"
+                android:textStyle="bold|italic" />
+
+            <TextView
+                android:id="@+id/cheesecake_tv"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_margin="8dp"
+                android:layout_weight="1"
+                android:background="#FF6381"
+                android:gravity="center"
+                android:text="@string/cheesecake"
+                android:textColor="#FFFFFF"
+                android:textSize="20sp"
+                android:textStyle="bold|italic" />
+
+        </LinearLayout>
+    </FrameLayout>
 
     <TextView
-        android:layout_margin="8dp"
-        android:layout_weight="1"
-        android:background="#FF6381"
-        android:textStyle="bold|italic"
-        android:textColor="#FFFFFF"
-        android:gravity="center"
-        android:textSize="20sp"
-        android:text="Nutella Pie"
-        android:id="@+id/nutella_pie_tv"
+        android:id="@+id/empty_text_view_widget_configuration"
         android:layout_width="match_parent"
-        android:layout_height="0dp" />
-
-    <TextView
-        android:layout_margin="8dp"
-        android:layout_weight="1"
-        android:background="#FF6381"
-        android:textStyle="bold|italic"
-        android:textColor="#FFFFFF"
+        android:layout_height="match_parent"
         android:gravity="center"
-        android:textSize="20sp"
-        android:text="Brownies"
-        android:id="@+id/brownies_tv"
-        android:layout_width="match_parent"
-        android:layout_height="0dp" />
+        tools:text="NO INTERNET" />
 
-
-    <TextView
-        android:layout_margin="8dp"
-        android:layout_weight="1"
-        android:background="#FF6381"
-        android:textStyle="bold|italic"
-        android:textColor="#FFFFFF"
-        android:gravity="center"
-        android:textSize="20sp"
-        android:text="Yellow Cake"
-        android:id="@+id/yellow_cake_tv"
-        android:layout_width="match_parent"
-        android:layout_height="0dp" />
-
-    <TextView
-        android:layout_margin="8dp"
-        android:layout_weight="1"
-        android:background="#FF6381"
-        android:textStyle="bold|italic"
-        android:textColor="#FFFFFF"
-        android:gravity="center"
-        android:textSize="20sp"
-        android:text="Cheesecake"
-        android:id="@+id/cheesecake_tv"
-        android:layout_width="match_parent"
-        android:layout_height="0dp" />
-
-</LinearLayout>
+</FrameLayout>

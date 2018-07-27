@@ -1,13 +1,18 @@
 package com.example.dbm.bakingapp;
 
+import android.content.Context;
 import android.content.Intent;
-import android.os.Parcelable;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.annotation.VisibleForTesting;
+import android.support.test.espresso.IdlingResource;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
@@ -18,6 +23,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.dbm.bakingapp.IdlingResource.SimpleIdlingResource;
 import com.example.dbm.bakingapp.adapters.RecipeAdapter;
 import com.example.dbm.bakingapp.classes.Recipe;
 import com.example.dbm.bakingapp.classes.RecipeIngredient;
@@ -32,13 +38,19 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements RecipeAdapter.ListItemClickListener {
+public class MainActivity extends AppCompatActivity implements
+        RecipeAdapter.ListItemClickListener {
+
+
+    public static final String TAG = "MyTag";
 
     private static final String LOG = MainActivity.class.getSimpleName();
 
+
     private static final String QUERY_URL = "https://d17h27t6h515a5.cloudfront.net/topher/2017/May/59121517_baking/baking.json";
 
-    public static final String TAG = "MyTag";
+    @Nullable
+    private SimpleIdlingResource mIdlingResource;
 
     private boolean mTabletMode;
     private RecyclerView recipesList;
@@ -56,30 +68,41 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.Lis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        if(findViewById(R.id.recycler_view_tablet) == null){
-            mTabletMode = false;
-            recipesList = (RecyclerView) findViewById(R.id.recycler_view_phone);
+        getIdlingResource();
 
-            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
-            recipesList.setLayoutManager(linearLayoutManager);
+        mIdlingResource.setIdleState(false);
 
+        recipesList = (RecyclerView) findViewById(R.id.recycler_view_main);
 
-        } else{
-            mTabletMode = true;
-            recipesList = (RecyclerView) findViewById(R.id.recycler_view_tablet);
+            if (findViewById(R.id.empty_text_view_tablet) == null) {
+                mTabletMode = false;
 
-            GridLayoutManager gridLayoutManager = new GridLayoutManager(this,2);
-            recipesList.setLayoutManager(gridLayoutManager);
+                LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+                recipesList.setLayoutManager(linearLayoutManager);
+                emptyTextView = (TextView) findViewById(R.id.empty_text_view_phone);
 
-        }
+            } else {
+                mTabletMode = true;
+                GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2);
+                recipesList.setLayoutManager(gridLayoutManager);
+                emptyTextView = (TextView) findViewById(R.id.empty_text_view_tablet);
+            }
 
-        emptyTextView = (TextView) findViewById(R.id.empty_text_view);
         recipesList.setHasFixedSize(true);
 
         mRequestQueue = Volley.newRequestQueue(this);
         listOfRecipes = new ArrayList<>();
 
-        startDataExtraction();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(isOnline()) {
+            startDataExtraction();
+        } else{
+            emptyTextView.setText(getString(R.string.no_internet_connection_message));
+        }
 
     }
 
@@ -136,7 +159,7 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.Lis
                             mAdapter = new RecipeAdapter(listOfRecipes,listOfRecipes.size(),MainActivity.this,MainActivity.this,mTabletMode);
                             recipesList.setAdapter(mAdapter);
                             emptyTextView.setVisibility(View.GONE);
-
+                            mIdlingResource.setIdleState(true);
 
                         } catch( JSONException e){
                             Log.e(LOG,e.getMessage());
@@ -174,22 +197,27 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.Lis
     @Override
     public void onListItemClick(int clickedItemIndex) {
         Intent intent = new Intent(MainActivity.this,RecipeDetailActivity.class);
-        //ArrayList<RecipeIngredient> ingredients = (ArrayList<RecipeIngredient>) listOfRecipes.get(clickedItemIndex).getmRecipeIngredients();
-        //ArrayList<RecipeStep> steps = (ArrayList<RecipeStep>) listOfRecipes.get(clickedItemIndex).getmRecipeSteps();
-        //Parcelable recipe = listOfRecipes.get(clickedItemIndex);
         intent.putExtra(getString(R.string.extra_recipe_ingredients),(ArrayList<RecipeIngredient>) listOfRecipes.get(clickedItemIndex).getmRecipeIngredients());
         intent.putExtra(getString(R.string.extra_recipe_steps),(ArrayList<RecipeStep>) listOfRecipes.get(clickedItemIndex).getmRecipeSteps());
         intent.putExtra(getString(R.string.extra_recipe),listOfRecipes.get(clickedItemIndex));
         startActivity(intent);
     }
 
-    private int numberOfColumns() {
-        DisplayMetrics displayMetrics = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        int widthDivider = 400;
-        int width = displayMetrics.widthPixels;
-        int nColumns = width / widthDivider;
-        if (nColumns < 2) return 2;
-        return nColumns;
+
+    @VisibleForTesting
+    @NonNull
+    public IdlingResource getIdlingResource() {
+        if (mIdlingResource == null) {
+            mIdlingResource = new SimpleIdlingResource();
+        }
+        return mIdlingResource;
     }
+
+    public boolean isOnline() {
+        ConnectivityManager cm =
+                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        return netInfo != null && netInfo.isConnected();
+    }
+
 }

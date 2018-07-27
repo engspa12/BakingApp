@@ -8,7 +8,21 @@
     <string name="extra_recipe_ingredients">extra_recipe_ingredients</string>
     <string name="extra_recipe">extra_recipe</string>
     <string name="extra_step_index">extra_step_index</string>
-    <string name="saved_index">saved_index</string>
-    <string name="first_launch">first_launch</string>
     <string name="configuration_title">Choose Recipe</string>
+    <string name="text_for_testing_content">Starting prep</string>
+    <string name="text_for_testing_placeholder">Remove pan from oven</string>
+    <string name="text_for_testing_navigation">Prep the cookie crust</string>
+    <string name="text_step_changed">3. Fill a large roasting pan with a few inches of hot water and place it on the bottom rack of the oven.</string>
+    <string name="no_internet_connection_message">There is no internet connection</string>
+    <string name="dessert_title">Dessert</string>
+    <string name="widget_content">Widget Content</string>
+    <string name="video_replacement_image_content_description">Image replacement for video</string>
+    <string name="nutella_pie">Nutella Pie</string>
+    <string name="brownies">Brownies</string>
+    <string name="yellow_cake">Yellow Cake</string>
+    <string name="cheesecake">Cheesecake</string>
+    <string name="exoplayer_play_content_description">Play Button</string>
+    <string name="exoplayer_pause_content_description">Pause Button</string>
+    <string name="step_video_content_description">Video present in this step</string>
+    <string name="ingredients_title">INGREDIENTS:</string>
 </resources>

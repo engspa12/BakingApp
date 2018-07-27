@@ -61,6 +61,7 @@ public class StepDescriptionNavigationFragment extends Fragment {
 
         View rootView = inflater.inflate(R.layout.fragment_step_description_navigation, container, false);
 
+
         stepDescriptionTV = (TextView) rootView.findViewById(R.id.step_description);
         previousStepButton = (Button) rootView.findViewById(R.id.previous_step_button);
         nextStepButton = (Button) rootView.findViewById(R.id.next_step_button);
@@ -68,40 +69,41 @@ public class StepDescriptionNavigationFragment extends Fragment {
         previousStepButton.setText(getString(R.string.previous_step));
         nextStepButton.setText(getString(R.string.next_step));
 
-        if(savedInstanceState != null) {
-            listSteps = savedInstanceState.getParcelableArrayList(STEPS_LIST);
-        }
+            if (savedInstanceState != null) {
+                listSteps = savedInstanceState.getParcelableArrayList(STEPS_LIST);
+            }
 
-        if(listSteps != null) {
+            if (listSteps != null) {
 
-            getStepDataFromIndex();
+                getStepDataFromIndex();
 
-            previousStepButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (mListStepIndex <= listSteps.size() - 1 && mListStepIndex != 0) {
-                        mListStepIndex--;
+                previousStepButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if (mListStepIndex <= listSteps.size() - 1 && mListStepIndex != 0) {
+                            mListStepIndex--;
+                        }
+                        getStepDataFromIndex();
+                        mCallback.onButtonClicked(mListStepIndex);
                     }
-                    getStepDataFromIndex();
-                    mCallback.onButtonClicked(mListStepIndex);
-                }
-            });
+                });
 
-            nextStepButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (mListStepIndex < listSteps.size() - 1 || mListStepIndex == 0) {
-                        mListStepIndex++;
+                nextStepButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if (mListStepIndex < listSteps.size() - 1 || mListStepIndex == 0) {
+                            mListStepIndex++;
+                        }
+                        getStepDataFromIndex();
+                        mCallback.onButtonClicked(mListStepIndex);
                     }
-                    getStepDataFromIndex();
-                    mCallback.onButtonClicked(mListStepIndex);
-                }
-            });
-        }
+                });
+            }
 
 
         return rootView;
     }
+
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle currentState) {
@@ -132,15 +134,7 @@ public class StepDescriptionNavigationFragment extends Fragment {
         } else{
             stepDescriptionTV.setText(listSteps.get(mListStepIndex).getmStepDescription());
         }
-        //setStepTitle();
     }
 
-    public void setStepTitle(){
-        String title = listSteps.get(mListStepIndex).getmStepShortDescription();
-        if(title.contains(".")){
-            getActivity().setTitle(title.substring(0,title.length() - 1));
-        } else{
-        getActivity().setTitle(title);
-        }
-    }
+
 }

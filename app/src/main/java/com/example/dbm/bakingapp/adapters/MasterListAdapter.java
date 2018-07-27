@@ -8,6 +8,8 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.dbm.bakingapp.R;
@@ -29,9 +31,7 @@ public class MasterListAdapter extends RecyclerView.Adapter<MasterListAdapter.St
 
     private Context mContext;
 
-    private boolean mTabletModeEnabled;
-
-    public interface ListItemDetailClickListener{
+    public interface ListItemDetailClickListener {
         void onListItemClick(int clickedItemIndex);
     }
 
@@ -43,7 +43,7 @@ public class MasterListAdapter extends RecyclerView.Adapter<MasterListAdapter.St
         LayoutInflater inflater = LayoutInflater.from(context);
         boolean shouldAttachToParentImmediately = false;
 
-        View view = inflater.inflate(R.layout.item_view,parent,shouldAttachToParentImmediately);
+        View view = inflater.inflate(R.layout.recipe_step_item_view, parent, shouldAttachToParentImmediately);
 
         StepViewHolder viewHolder = new StepViewHolder(view);
 
@@ -61,81 +61,91 @@ public class MasterListAdapter extends RecyclerView.Adapter<MasterListAdapter.St
     }
 
     public MasterListAdapter(List<RecipeStep> steps, int numberOfItems, ListItemDetailClickListener listener, Context context,
-                             boolean tabletMode,List<RecipeIngredient> ingredients){
+                             List<RecipeIngredient> ingredients) {
         listOfSteps = steps;
         mNumberOfSteps = numberOfItems;
         mOnClickListener = listener;
         mContext = context;
-        mTabletModeEnabled = tabletMode;
         listOfIngredients = ingredients;
     }
 
-    public class StepViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    public class StepViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        TextView stepTextView;
+        TextView stepTitleTextView;
 
-        public StepViewHolder(View itemView) {
+        TextView stepNumberTextView;
+
+        ImageView videoPresentImageView;
+
+        FrameLayout imageViewContainer;
+
+        private StepViewHolder(View itemView) {
             super(itemView);
 
-            stepTextView = (TextView) itemView.findViewById(R.id.item_tv) ;
+            stepTitleTextView = (TextView) itemView.findViewById(R.id.text_item_tv);
+            stepNumberTextView = (TextView) itemView.findViewById(R.id.number_item_tv);
+            videoPresentImageView = (ImageView) itemView.findViewById(R.id.iv_video_present);
+            imageViewContainer = (FrameLayout) itemView.findViewById(R.id.image_view_container);
 
             itemView.setOnClickListener(this);
         }
 
-        public void bind(int listIndex){
+        private void bind(int listIndex) {
 
-            if(listIndex == 0){
+            if (listIndex == 0) {
                 StringBuilder builder = new StringBuilder();
-                builder.append("INGREDIENTS: " + "\n\n");
+                builder.append(mContext.getString(R.string.ingredients_title) + "\n\n");
 
-                for(int i=0;i<listOfIngredients.size();i++){
-                    if(listOfIngredients.get(i).getmIngredientMeasure().equals("UNIT")){
+                for (int i = 0; i < listOfIngredients.size(); i++) {
+                    if (listOfIngredients.get(i).getmIngredientMeasure().equals("UNIT")) {
                         builder.append("- " + getCorrectValue(listOfIngredients.get(i).getmIngredientQuantity()) + " "
                                 + listOfIngredients.get(i).getmIngredientName() + "\n");
-                    } else if(listOfIngredients.get(i).getmIngredientMeasure().equals("TSP")){
+                    } else if (listOfIngredients.get(i).getmIngredientMeasure().equals("TSP")) {
                         builder.append("- " + getCorrectValue(listOfIngredients.get(i).getmIngredientQuantity()) + " teaspoons of "
                                 + listOfIngredients.get(i).getmIngredientName() + "\n");
-                    } else if(listOfIngredients.get(i).getmIngredientMeasure().equals("TBLSP")){
+                    } else if (listOfIngredients.get(i).getmIngredientMeasure().equals("TBLSP")) {
                         builder.append("- " + getCorrectValue(listOfIngredients.get(i).getmIngredientQuantity()) + " tablespoons of "
                                 + listOfIngredients.get(i).getmIngredientName() + "\n");
-                    } else if(listOfIngredients.get(i).getmIngredientMeasure().equals("CUPS")){
+                    } else if (listOfIngredients.get(i).getmIngredientMeasure().equals("CUPS")) {
                         builder.append("- " + getCorrectValue(listOfIngredients.get(i).getmIngredientQuantity()) + " cups of "
                                 + listOfIngredients.get(i).getmIngredientName() + "\n");
-                    } else if(listOfIngredients.get(i).getmIngredientMeasure().equals("OZ")){
+                    } else if (listOfIngredients.get(i).getmIngredientMeasure().equals("OZ")) {
                         builder.append("- " + getCorrectValue(listOfIngredients.get(i).getmIngredientQuantity()) + " ounces of "
                                 + listOfIngredients.get(i).getmIngredientName() + "\n");
-                    } else if(listOfIngredients.get(i).getmIngredientMeasure().equals("K")){
+                    } else if (listOfIngredients.get(i).getmIngredientMeasure().equals("K")) {
                         builder.append("- " + getCorrectValue(listOfIngredients.get(i).getmIngredientQuantity()) + " kilograms of "
                                 + listOfIngredients.get(i).getmIngredientName() + "\n");
-                    } else if(listOfIngredients.get(i).getmIngredientMeasure().equals("G")){
+                    } else if (listOfIngredients.get(i).getmIngredientMeasure().equals("G")) {
                         builder.append("- " + getCorrectValue(listOfIngredients.get(i).getmIngredientQuantity()) + " grams of "
                                 + listOfIngredients.get(i).getmIngredientName() + "\n");
-                    } else if(listOfIngredients.get(i).getmIngredientMeasure().equals("CUP")){
+                    } else if (listOfIngredients.get(i).getmIngredientMeasure().equals("CUP")) {
                         builder.append("- " + getCorrectValue(listOfIngredients.get(i).getmIngredientQuantity()) + " cups of "
                                 + listOfIngredients.get(i).getmIngredientName() + "\n");
-                    } else{
+                    } else {
                         builder.append("- " + getCorrectValue(listOfIngredients.get(i).getmIngredientQuantity()) + " "
                                 + listOfIngredients.get(i).getmIngredientMeasure() + " of " + listOfIngredients.get(i).getmIngredientName() + "\n");
                     }
                 }
 
-                stepTextView.setText(builder.toString());
-                stepTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP,14);
-                stepTextView.setGravity(Gravity.START);
-                stepTextView.setBackgroundColor(mContext.getResources().getColor(R.color.colorRecipeIngredients));
+                String ingredientsList = builder.toString();
+
+                stepTitleTextView.setText(ingredientsList.substring(0,ingredientsList.length() - 1));
+                stepTitleTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
+                stepTitleTextView.setGravity(Gravity.CENTER_VERTICAL);
+                stepTitleTextView.setBackgroundColor(mContext.getResources().getColor(R.color.colorRecipeIngredients));
+                stepTitleTextView.setVisibility(View.VISIBLE);
+                stepNumberTextView.setVisibility(View.GONE);
+                imageViewContainer.setVisibility(View.GONE);
             } else {
-                    stepTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP,22);
-                    stepTextView.setGravity(Gravity.CENTER);
-                    setStepTitle(listIndex - 1);
-                    stepTextView.setBackgroundColor(mContext.getResources().getColor(R.color.colorRecipeSteps));
+                stepTitleTextView.setVisibility(View.VISIBLE);
+                stepNumberTextView.setVisibility(View.VISIBLE);
+                stepTitleTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
+                stepTitleTextView.setGravity(Gravity.CENTER_VERTICAL);
+                setStep(listIndex - 1);
+                stepTitleTextView.setBackgroundColor(mContext.getResources().getColor(R.color.colorRecipeSteps));
+                stepNumberTextView.setBackgroundColor(mContext.getResources().getColor(R.color.colorStepNumber));
             }
 
-            //if(mTabletModeEnabled) {
-                //DisplayMetrics displayMetrics = new DisplayMetrics();
-                //((Activity) mContext).getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-                //int height = displayMetrics.heightPixels;
-                //recipeNameTextView.setHeight(height / 2 - 164);
-            //}
         }
 
         @Override
@@ -144,23 +154,41 @@ public class MasterListAdapter extends RecyclerView.Adapter<MasterListAdapter.St
             mOnClickListener.onListItemClick(clickedPosition);
         }
 
-        public void setStepTitle(int index){
+        private void setStep(int index) {
             String title = listOfSteps.get(index).getmStepShortDescription();
-            if(title.contains(".")){
-                stepTextView.setText(title.substring(0,title.length() - 1));
-            } else{
-                stepTextView.setText(title);
+            String urlVideo = listOfSteps.get(index).getmStepVideoUrl();
+
+            if (title.contains(".")) {
+                stepTitleTextView.setText(title.substring(0, title.length() - 1));
+            } else {
+                stepTitleTextView.setText(title);
             }
+
+            if(index != 0) {
+                stepNumberTextView.setText(String.valueOf(index));
+                stepNumberTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
+            } else{
+                stepNumberTextView.setText("∙");
+                stepNumberTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 30);
+            }
+
+
+            if(urlVideo != null && !(urlVideo.equals(""))){
+                videoPresentImageView.setVisibility(View.VISIBLE);
+            } else{
+                videoPresentImageView.setVisibility(View.INVISIBLE);
+            }
+            imageViewContainer.setBackgroundColor(mContext.getResources().getColor(R.color.colorRecipeSteps));
+            imageViewContainer.setVisibility(View.VISIBLE);
         }
     }
 
-    public String getCorrectValue(double input){
-        if(input % 1 == 0){
+    private String getCorrectValue(double input) {
+        if (input % 1 == 0) {
             return String.valueOf((int) input);
         }
         return String.valueOf(input);
     }
-
 
 
 }

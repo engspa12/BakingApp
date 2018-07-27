@@ -60,7 +60,6 @@ public class RecipeProvider extends ContentProvider {
                 throw new IllegalArgumentException("Cannot query unknown URI " + uri);
         }
 
-        //cursor.setNotificationUri(getContext().getContentResolver(),uri);
 
         return cursor;
     }
@@ -96,8 +95,6 @@ public class RecipeProvider extends ContentProvider {
                     Toast.makeText(getContext(),"The widget couldn't be added",Toast.LENGTH_SHORT).show();
                 }
 
-                //getContext().getContentResolver().notifyChange(uri,null);
-
                 return ContentUris.withAppendedId(uri, newRowId);
             default:
                 throw new IllegalArgumentException("Insertion is not supported for " + uri);
@@ -126,13 +123,7 @@ public class RecipeProvider extends ContentProvider {
 
 
         if (rowsDeleted != 0) {
-        //    getContext().getContentResolver().notifyChange(uri, null);
-        }
-
-        if (rowsDeleted != 0) {
             Toast.makeText(getContext(), "Widget deleted successfully", Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(getContext(), "Widget deletion failed", Toast.LENGTH_SHORT).show();
         }
 
         return rowsDeleted;

@@ -1,10 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="#FFFFFF"
-    android:id="@+id/exoplayer_container"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:scaleType="fitXY"/>
+    android:layout_height="match_parent">
+
+    <FrameLayout
+        android:id="@+id/exoplayer_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#FFFFFF"
+        android:scaleType="fitXY" />
+
+    <TextView
+        tools:text="NO INTERNET"
+        android:gravity="center"
+        android:id="@+id/empty_text_view_step_detail"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+</FrameLayout>
 

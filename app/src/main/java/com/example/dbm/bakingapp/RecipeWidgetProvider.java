@@ -1,11 +1,10 @@
 package com.example.dbm.bakingapp;
 
-import android.app.Activity;
-import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.widget.RemoteViews;
 
@@ -24,7 +23,6 @@ public class RecipeWidgetProvider extends AppWidgetProvider {
 
     @Override
     public void onAppWidgetOptionsChanged(Context context, AppWidgetManager appWidgetManager, int appWidgetId, Bundle newOptions) {
-        //RecipeAppWidgetConfigure.updateWidgets(context);
         super.onAppWidgetOptionsChanged(context, appWidgetManager, appWidgetId, newOptions);
     }
 
@@ -33,4 +31,5 @@ public class RecipeWidgetProvider extends AppWidgetProvider {
         RecipeAppWidgetConfigure.deleteWidgets(context,appWidgetIds);
         super.onDeleted(context, appWidgetIds);
     }
+
 }
