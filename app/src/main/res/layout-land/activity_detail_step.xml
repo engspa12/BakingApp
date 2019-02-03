@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <!--Landscape mode in phone, video in fullscreen-->
     <FrameLayout
         android:id="@+id/exoplayer_container"
         android:layout_width="match_parent"

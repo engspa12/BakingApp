@@ -24,6 +24,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.dbm.bakingapp.activities.MainActivity;
 import com.example.dbm.bakingapp.classes.Recipe;
 import com.example.dbm.bakingapp.classes.RecipeIngredient;
 import com.example.dbm.bakingapp.classes.RecipeStep;
@@ -147,6 +148,7 @@ public class RecipeAppWidgetConfigure extends AppCompatActivity {
         }
     }
 
+    //Save recipe information in database via a Content Provider
     public void saveRecipeInDatabase(int recipeChoice){
         ContentValues values = new ContentValues();
         values.put(RecipeContract.RecipeEntry.COLUMN_RECIPE_WIDGET_ID, mAppWidgetId);
@@ -158,6 +160,7 @@ public class RecipeAppWidgetConfigure extends AppCompatActivity {
         getContentResolver().insert(mUri,values);
     }
 
+    //Finish configuration for widget
     public void endConfiguration(int recipeChoice){
 
         AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this);
@@ -187,7 +190,7 @@ public class RecipeAppWidgetConfigure extends AppCompatActivity {
         finish();
     }
 
-
+    //Get recipes data from Api
     public void getRecipesData(){
         URL queryUrl;
 
@@ -269,6 +272,7 @@ public class RecipeAppWidgetConfigure extends AppCompatActivity {
     }
 
 
+    //Get list of a recipe's ingredients
     public List<String> getIngredientsStringList(List<RecipeIngredient> listOfIngredients){
 
         List<String> list = new ArrayList<>();
@@ -308,16 +312,17 @@ public class RecipeAppWidgetConfigure extends AppCompatActivity {
 
     }
 
+    //Return an String from an ArrayList<String>
     public String getIngredientsStringToStore(ArrayList<String> ingredientsList){
 
-        //Convert ArrayList<String> to a String using GSON library
-        //Each ingredient is a String
+        //Convert ArrayList<String> to a String using Gson library
+        //Each ingredient is a String in the list
         Gson gson = new Gson();
-        String inputString = gson.toJson(ingredientsList);
+        return gson.toJson(ingredientsList);
 
-        return inputString;
     }
 
+    //Return int or double value depending on the input
     public String getCorrectValue(double input){
         if(input % 1 == 0){
             return String.valueOf((int) input);
@@ -347,7 +352,7 @@ public class RecipeAppWidgetConfigure extends AppCompatActivity {
                 if (cursor.getCount() != 0) {
                     cursor.moveToFirst();
 
-                    //Retrieve the ArrayList<String>
+                    //Retrieve the ArrayList<String> of ingredients
                     Type type = new TypeToken<ArrayList<String>>() {}.getType();
                     String output = cursor.getString(cursor.getColumnIndex(RecipeContract.RecipeEntry.COLUMN_RECIPE_INGREDIENTS));
                     ArrayList<String> finalOutputString = gson.fromJson(output, type);
@@ -384,12 +389,14 @@ public class RecipeAppWidgetConfigure extends AppCompatActivity {
         if(widgetsDeleted.length != 0) {
 
             for (int i = 0; i < widgetsDeleted.length; i++) {
+                //Delete widget from database
                 wantedUri = ContentUris.withAppendedId(RecipeContract.RecipeEntry.CONTENT_URI, widgetsDeleted[i]);
                 context.getContentResolver().delete(wantedUri, null, null);
             }
         }
     }
 
+    //Check Internet connectivity
     public boolean isOnline() {
         ConnectivityManager cm =
                 (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);

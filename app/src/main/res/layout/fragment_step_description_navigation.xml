@@ -10,7 +10,7 @@
         tools:background="@color/colorAccent"
         android:textColor="#FFFFFF"
         android:textStyle="bold|italic"
-        android:textSize="18sp"
+        android:textSize="14sp"
         android:layout_weight="1"
         android:gravity="center"
         tools:text="Description"

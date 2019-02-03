@@ -1,4 +1,4 @@
-package com.example.dbm.bakingapp;
+package com.example.dbm.bakingapp.activities;
 
 import android.app.Activity;
 import android.content.Context;
@@ -15,6 +15,7 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
+import com.example.dbm.bakingapp.R;
 import com.example.dbm.bakingapp.classes.Recipe;
 import com.example.dbm.bakingapp.classes.RecipeStep;
 import com.example.dbm.bakingapp.fragments.ExoplayerFragment;
@@ -97,6 +98,7 @@ public class StepDetailActivity extends AppCompatActivity implements StepDescrip
             ab = getSupportActionBar();
             ab.setDisplayHomeAsUpEnabled(true);
 
+            //Step text and navigation
             stepDescriptionNavigationFragment = new StepDescriptionNavigationFragment();
 
             stepDescriptionNavigationFragment.setStepsList(mListSteps);
@@ -107,7 +109,7 @@ public class StepDetailActivity extends AppCompatActivity implements StepDescrip
                     .commit();
 
             if (firstLaunch) {
-
+                //Exoplayer
                 exoplayerFragment = new ExoplayerFragment();
 
                 exoplayerFragment.setStepsList(mListSteps);
@@ -122,7 +124,7 @@ public class StepDetailActivity extends AppCompatActivity implements StepDescrip
 
 
         } else {
-
+            //Only Exoplayer is shown
             View decorView = getWindow().getDecorView();
             int uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN;
             decorView.setSystemUiVisibility(uiOptions);

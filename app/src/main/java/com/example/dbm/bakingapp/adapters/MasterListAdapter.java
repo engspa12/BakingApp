@@ -41,9 +41,8 @@ public class MasterListAdapter extends RecyclerView.Adapter<MasterListAdapter.St
 
         Context context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
-        boolean shouldAttachToParentImmediately = false;
 
-        View view = inflater.inflate(R.layout.recipe_step_item_view, parent, shouldAttachToParentImmediately);
+        View view = inflater.inflate(R.layout.recipe_step_item_view, parent, false);
 
         StepViewHolder viewHolder = new StepViewHolder(view);
 
@@ -62,6 +61,8 @@ public class MasterListAdapter extends RecyclerView.Adapter<MasterListAdapter.St
 
     public MasterListAdapter(List<RecipeStep> steps, int numberOfItems, ListItemDetailClickListener listener, Context context,
                              List<RecipeIngredient> ingredients) {
+
+        //Pass both the ingredients list and the steps list
         listOfSteps = steps;
         mNumberOfSteps = numberOfItems;
         mOnClickListener = listener;
@@ -93,6 +94,7 @@ public class MasterListAdapter extends RecyclerView.Adapter<MasterListAdapter.St
         private void bind(int listIndex) {
 
             if (listIndex == 0) {
+                //Use the ingredients list to generate a String and this will be the item with index 0 in the adapter
                 StringBuilder builder = new StringBuilder();
                 builder.append(mContext.getString(R.string.ingredients_title) + "\n\n");
 
@@ -129,6 +131,7 @@ public class MasterListAdapter extends RecyclerView.Adapter<MasterListAdapter.St
 
                 String ingredientsList = builder.toString();
 
+                //Set the ingredients list as a String without the last character --> "\n"
                 stepTitleTextView.setText(ingredientsList.substring(0,ingredientsList.length() - 1));
                 stepTitleTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
                 stepTitleTextView.setGravity(Gravity.CENTER_VERTICAL);
@@ -141,6 +144,9 @@ public class MasterListAdapter extends RecyclerView.Adapter<MasterListAdapter.St
                 stepNumberTextView.setVisibility(View.VISIBLE);
                 stepTitleTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
                 stepTitleTextView.setGravity(Gravity.CENTER_VERTICAL);
+                //Subtract 1 because we include the ingredients list as item with index 0 in the adapter
+                //therefore item 1 in adapter will be passed as item 0, item 2 will be passed as item 1 and so on
+                //this is done to identify the correct position in the steps list
                 setStep(listIndex - 1);
                 stepTitleTextView.setBackgroundColor(mContext.getResources().getColor(R.color.colorRecipeSteps));
                 stepNumberTextView.setBackgroundColor(mContext.getResources().getColor(R.color.colorStepNumber));
@@ -183,6 +189,7 @@ public class MasterListAdapter extends RecyclerView.Adapter<MasterListAdapter.St
         }
     }
 
+    //Return an int or double value depending upon the input
     private String getCorrectValue(double input) {
         if (input % 1 == 0) {
             return String.valueOf((int) input);

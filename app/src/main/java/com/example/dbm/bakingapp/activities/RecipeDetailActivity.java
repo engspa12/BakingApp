@@ -1,4 +1,4 @@
-package com.example.dbm.bakingapp;
+package com.example.dbm.bakingapp.activities;
 
 import android.app.Activity;
 import android.content.Context;
@@ -16,6 +16,7 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
+import com.example.dbm.bakingapp.R;
 import com.example.dbm.bakingapp.classes.Recipe;
 import com.example.dbm.bakingapp.classes.RecipeIngredient;
 import com.example.dbm.bakingapp.classes.RecipeStep;
@@ -202,6 +203,8 @@ public class RecipeDetailActivity extends AppCompatActivity implements MasterLis
         }
     }
 
+
+    //Check Internet connectivity
     public boolean isOnline() {
         ConnectivityManager cm =
                 (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);

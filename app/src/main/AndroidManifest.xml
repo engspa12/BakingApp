@@ -12,7 +12,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+        <activity android:name=".activities.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -20,18 +20,18 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".RecipeDetailActivity"
-            android:parentActivityName=".MainActivity">
+            android:name=".activities.RecipeDetailActivity"
+            android:parentActivityName=".activities.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.dbm.bakingapp.MainActivity" />
+                android:value="com.example.dbm.bakingapp.activities.MainActivity" />
         </activity>
         <activity
-            android:name=".StepDetailActivity"
-            android:parentActivityName=".RecipeDetailActivity">
+            android:name=".activities.StepDetailActivity"
+            android:parentActivityName=".activities.RecipeDetailActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.dbm.bakingapp.RecipeDetailActivity" />
+                android:value="com.example.dbm.bakingapp.activities.RecipeDetailActivity" />
         </activity>
 
         <activity android:name=".RecipeAppWidgetConfigure">
