@@ -10,14 +10,14 @@
         android:layout_height="match_parent"
         android:background="#80DEEA"
         android:orientation="vertical"
-        tools:context="com.example.dbm.bakingapp.StepDetailActivity">
+        tools:context="com.example.dbm.bakingapp.activities.StepDetailActivity">
 
         <!--This is a fragment container-->
         <FrameLayout
             android:id="@+id/exoplayer_container"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1.75"
+            android:layout_weight="1.50"
             android:background="#FFFFFF"
             android:scaleType="fitXY" />
 

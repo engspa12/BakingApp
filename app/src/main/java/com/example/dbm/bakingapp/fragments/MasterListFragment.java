@@ -63,6 +63,7 @@ public class MasterListFragment extends Fragment implements MasterListAdapter.Li
         recyclerViewRecipeIngredients.setLayoutManager(linearLayoutManager);
         recyclerViewRecipeIngredients.setHasFixedSize(true);
 
+        //Add 1 because we include the ingredients list and it will be shown as first item in the adapter
         MasterListAdapter mAdapter = new MasterListAdapter(mListSteps, mListSteps.size() + 1, this, getContext(), mListIngredients);
 
         recyclerViewRecipeIngredients.setAdapter(mAdapter);

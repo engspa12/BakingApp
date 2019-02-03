@@ -1,4 +1,4 @@
-package com.example.dbm.bakingapp;
+package com.example.dbm.bakingapp.activities;
 
 import android.content.Context;
 import android.content.Intent;
@@ -24,6 +24,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.dbm.bakingapp.IdlingResource.SimpleIdlingResource;
+import com.example.dbm.bakingapp.R;
 import com.example.dbm.bakingapp.adapters.RecipeAdapter;
 import com.example.dbm.bakingapp.classes.Recipe;
 import com.example.dbm.bakingapp.classes.RecipeIngredient;
@@ -106,6 +107,7 @@ public class MainActivity extends AppCompatActivity implements
 
     }
 
+    //Make Api call to get recipes
     public void getDataFromHttpUrlUsingJSON(String url){
         listOfRecipes.clear();
 
@@ -206,6 +208,7 @@ public class MainActivity extends AppCompatActivity implements
 
     @VisibleForTesting
     @NonNull
+    //Only used for testing with Espresso, so we can wait to proceed
     public IdlingResource getIdlingResource() {
         if (mIdlingResource == null) {
             mIdlingResource = new SimpleIdlingResource();
@@ -213,6 +216,7 @@ public class MainActivity extends AppCompatActivity implements
         return mIdlingResource;
     }
 
+    //Check Internet connectivity
     public boolean isOnline() {
         ConnectivityManager cm =
                 (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);

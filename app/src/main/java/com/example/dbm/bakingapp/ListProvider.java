@@ -11,7 +11,7 @@ import java.util.ArrayList;
 public class ListProvider implements RemoteViewsService.RemoteViewsFactory {
 
     private ArrayList<String> ingredientsList;
-    private Context context = null;
+    private Context context;
     private int appWidgetId;
 
     public ListProvider(Context context, Intent intent) {

@@ -14,7 +14,7 @@
             android:layout_height="match_parent"
             android:baselineAligned="false"
             android:orientation="horizontal"
-            tools:context=".RecipeDetailActivity">
+            tools:context=".activities.RecipeDetailActivity">
 
             <fragment
                 android:id="@+id/master_list_fragment"
@@ -34,7 +34,7 @@
                 android:background="#80DEEA"
                 android:orientation="vertical"
                 android:padding="16dp"
-                tools:context="com.example.dbm.bakingapp.StepDetailActivity">
+                tools:context="com.example.dbm.bakingapp.activities.StepDetailActivity">
 
                 <!--This is a fragment container-->
                 <FrameLayout
