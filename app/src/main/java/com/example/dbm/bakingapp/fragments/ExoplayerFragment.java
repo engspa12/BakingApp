@@ -2,10 +2,10 @@ package com.example.dbm.bakingapp.fragments;
 
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.util.Log;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,7 +29,7 @@ import com.google.android.exoplayer2.source.TrackGroupArray;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
 import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
 import com.google.android.exoplayer2.trackselection.TrackSelector;
-import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
+import com.google.android.exoplayer2.ui.PlayerView;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
 import com.squareup.picasso.Picasso;
@@ -40,7 +40,7 @@ import java.util.List;
 public class ExoplayerFragment extends Fragment implements ExoPlayer.EventListener {
 
     private SimpleExoPlayer mExoPlayer;
-    private SimpleExoPlayerView mPlayerView;
+    private PlayerView mPlayerView;
 
     private static final String STEPS_LIST = "list";
 
@@ -78,7 +78,7 @@ public class ExoplayerFragment extends Fragment implements ExoPlayer.EventListen
 
         noVideoTextView = (TextView) rootView.findViewById(R.id.no_video_text_view);
         emptyImageView = (ImageView) rootView.findViewById(R.id.empty_image_view);
-        mPlayerView = (SimpleExoPlayerView) rootView.findViewById(R.id.playerView);
+        mPlayerView = (PlayerView) rootView.findViewById(R.id.playerView);
 
 
         noVideoTextView.setText(getString(R.string.no_video_or_image_message));
@@ -190,10 +190,10 @@ public class ExoplayerFragment extends Fragment implements ExoPlayer.EventListen
         }
     }
 
-    @Override
+    /*@Override
     public void onTimelineChanged(Timeline timeline, Object manifest) {
 
-    }
+    }*/
 
     @Override
     public void onTracksChanged(TrackGroupArray trackGroups, TrackSelectionArray trackSelections) {
@@ -214,10 +214,10 @@ public class ExoplayerFragment extends Fragment implements ExoPlayer.EventListen
 
     }
 
-    @Override
+    /*@Override
     public void onPositionDiscontinuity() {
 
-    }
+    }*/
 
     private void releasePlayer() {
         if (mExoPlayer != null) {

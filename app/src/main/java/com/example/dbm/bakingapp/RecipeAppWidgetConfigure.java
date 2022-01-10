@@ -10,7 +10,7 @@ import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -29,6 +29,7 @@ import com.example.dbm.bakingapp.classes.Recipe;
 import com.example.dbm.bakingapp.classes.RecipeIngredient;
 import com.example.dbm.bakingapp.classes.RecipeStep;
 import com.example.dbm.bakingapp.data.RecipeContract;
+
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -344,41 +345,45 @@ public class RecipeAppWidgetConfigure extends AppCompatActivity {
         AppWidgetManager manager = AppWidgetManager.getInstance(context);
         int[] appWidgetIds = manager.getAppWidgetIds(new ComponentName(context, RecipeWidgetProvider.class));
 
-        for(int i=0;i<appWidgetIds.length;i++) {
-            wantedUri = ContentUris.withAppendedId(RecipeContract.RecipeEntry.CONTENT_URI,appWidgetIds[i]);
+        for (int appWidgetId : appWidgetIds) {
+            wantedUri = ContentUris.withAppendedId(RecipeContract.RecipeEntry.CONTENT_URI, appWidgetId);
             Cursor cursor = context.getContentResolver().query(wantedUri, projection, null, null, null);
 
-            if(cursor != null) {
+            if (cursor != null) {
                 if (cursor.getCount() != 0) {
                     cursor.moveToFirst();
 
                     //Retrieve the ArrayList<String> of ingredients
                     Type type = new TypeToken<ArrayList<String>>() {}.getType();
-                    String output = cursor.getString(cursor.getColumnIndex(RecipeContract.RecipeEntry.COLUMN_RECIPE_INGREDIENTS));
+                    int columnIndexIngredients = cursor.getColumnIndex(RecipeContract.RecipeEntry.COLUMN_RECIPE_INGREDIENTS);
+                    String output = cursor.getString(columnIndexIngredients);
                     ArrayList<String> finalOutputString = gson.fromJson(output, type);
 
                     RemoteViews views = new RemoteViews(context.getPackageName(),
                             R.layout.recipe_widget);
                     //Set Recipe name in Widget
-                    views.setTextViewText(R.id.widget_recipe_title,cursor.getString(cursor.getColumnIndex(RecipeContract.RecipeEntry.COLUMN_RECIPE_NAME)));
+                    int columnIndexName = cursor.getColumnIndex(RecipeContract.RecipeEntry.COLUMN_RECIPE_NAME);
+                    views.setTextViewText(R.id.widget_recipe_title, cursor.getString(columnIndexName));
 
                     Intent svcIntent = new Intent(context, WidgetService.class);
 
-                    svcIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetIds[i]);
-                    svcIntent.putExtra("Ingredients_List",finalOutputString);
+                    svcIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
+                    svcIntent.putExtra("Ingredients_List", finalOutputString);
 
                     svcIntent.setData(Uri.parse(
                             svcIntent.toUri(Intent.URI_INTENT_SCHEME)));
 
                     //Set RemoteAdapter for ListView
-                    views.setRemoteAdapter(appWidgetIds[i], R.id.listViewWidget,
+                    views.setRemoteAdapter(appWidgetId, R.id.listViewWidget,
                             svcIntent);
 
-                    manager.updateAppWidget(appWidgetIds[i], views);
+                    manager.updateAppWidget(appWidgetId, views);
 
                 }
             }
-            cursor.close();
+            if (cursor != null) {
+                cursor.close();
+            }
         }
     }
 
@@ -388,9 +393,9 @@ public class RecipeAppWidgetConfigure extends AppCompatActivity {
 
         if(widgetsDeleted.length != 0) {
 
-            for (int i = 0; i < widgetsDeleted.length; i++) {
+            for (int j : widgetsDeleted) {
                 //Delete widget from database
-                wantedUri = ContentUris.withAppendedId(RecipeContract.RecipeEntry.CONTENT_URI, widgetsDeleted[i]);
+                wantedUri = ContentUris.withAppendedId(RecipeContract.RecipeEntry.CONTENT_URI, j);
                 context.getContentResolver().delete(wantedUri, null, null);
             }
         }
