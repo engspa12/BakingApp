@@ -2,7 +2,7 @@
 <appwidget-provider
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:initialLayout="@layout/recipe_widget"
-    android:configure="com.example.dbm.bakingapp.RecipeAppWidgetConfigure"
+    android:configure="com.example.dbm.bakingapp.widget.RecipeAppWidgetConfigure"
     android:minHeight="110dp"
     android:minWidth="110dp"
     android:previewImage="@drawable/dessert_icon"

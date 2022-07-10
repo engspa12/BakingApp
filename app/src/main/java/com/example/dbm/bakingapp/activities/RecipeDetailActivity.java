@@ -17,9 +17,9 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.example.dbm.bakingapp.R;
-import com.example.dbm.bakingapp.classes.Recipe;
-import com.example.dbm.bakingapp.classes.RecipeIngredient;
-import com.example.dbm.bakingapp.classes.RecipeStep;
+import com.example.dbm.bakingapp.domain.Recipe;
+import com.example.dbm.bakingapp.domain.RecipeIngredient;
+import com.example.dbm.bakingapp.domain.RecipeStep;
 import com.example.dbm.bakingapp.fragments.ExoplayerFragment;
 import com.example.dbm.bakingapp.fragments.MasterListFragment;
 import com.example.dbm.bakingapp.fragments.StepDescriptionNavigationFragment;

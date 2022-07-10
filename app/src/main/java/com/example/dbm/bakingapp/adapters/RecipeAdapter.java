@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.dbm.bakingapp.R;
-import com.example.dbm.bakingapp.classes.Recipe;
+import com.example.dbm.bakingapp.domain.Recipe;
 
 import java.util.List;
 

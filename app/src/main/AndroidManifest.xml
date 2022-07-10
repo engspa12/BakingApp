@@ -36,14 +36,14 @@
                 android:value="com.example.dbm.bakingapp.activities.RecipeDetailActivity" />
         </activity>
 
-        <activity android:name=".RecipeAppWidgetConfigure"
+        <activity android:name=".widget.RecipeAppWidgetConfigure"
             android:exported="false">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE"/>
             </intent-filter>
         </activity>
 
-        <receiver android:name=".RecipeWidgetProvider"
+        <receiver android:name=".widget.RecipeWidgetProvider"
             android:exported="false">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
@@ -55,7 +55,7 @@
         </receiver>
 
         <service
-            android:name=".WidgetService"
+            android:name=".widget.WidgetService"
             android:permission="android.permission.BIND_REMOTEVIEWS" />
 
         <provider

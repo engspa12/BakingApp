@@ -12,7 +12,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.dbm.bakingapp.R;
-import com.example.dbm.bakingapp.classes.RecipeStep;
+import com.example.dbm.bakingapp.domain.RecipeStep;
 
 import java.util.ArrayList;
 import java.util.List;

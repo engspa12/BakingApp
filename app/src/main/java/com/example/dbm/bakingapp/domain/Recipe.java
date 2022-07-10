@@ -1,4 +1,4 @@
-package com.example.dbm.bakingapp.classes;
+package com.example.dbm.bakingapp.domain;
 
 import android.os.Parcel;
 import android.os.Parcelable;

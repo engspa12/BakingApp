@@ -1,10 +1,12 @@
-package com.example.dbm.bakingapp;
+package com.example.dbm.bakingapp.widget;
 
 import android.appwidget.AppWidgetManager;
 import android.content.Context;
 import android.content.Intent;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
+
+import com.example.dbm.bakingapp.R;
 
 import java.util.ArrayList;
 

@@ -27,9 +27,9 @@ import com.android.volley.toolbox.Volley;
 import com.example.dbm.bakingapp.IdlingResource.SimpleIdlingResource;
 import com.example.dbm.bakingapp.R;
 import com.example.dbm.bakingapp.adapters.RecipeAdapter;
-import com.example.dbm.bakingapp.classes.Recipe;
-import com.example.dbm.bakingapp.classes.RecipeIngredient;
-import com.example.dbm.bakingapp.classes.RecipeStep;
+import com.example.dbm.bakingapp.domain.Recipe;
+import com.example.dbm.bakingapp.domain.RecipeIngredient;
+import com.example.dbm.bakingapp.domain.RecipeStep;
 
 import org.json.JSONArray;
 import org.json.JSONException;

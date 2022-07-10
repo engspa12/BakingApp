@@ -13,8 +13,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.dbm.bakingapp.R;
-import com.example.dbm.bakingapp.classes.RecipeIngredient;
-import com.example.dbm.bakingapp.classes.RecipeStep;
+import com.example.dbm.bakingapp.domain.RecipeIngredient;
+import com.example.dbm.bakingapp.domain.RecipeStep;
 
 import java.util.List;
 

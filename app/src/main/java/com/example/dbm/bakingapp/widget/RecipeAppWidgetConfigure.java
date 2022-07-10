@@ -1,4 +1,4 @@
-package com.example.dbm.bakingapp;
+package com.example.dbm.bakingapp.widget;
 
 import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
@@ -24,10 +24,11 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.dbm.bakingapp.R;
 import com.example.dbm.bakingapp.activities.MainActivity;
-import com.example.dbm.bakingapp.classes.Recipe;
-import com.example.dbm.bakingapp.classes.RecipeIngredient;
-import com.example.dbm.bakingapp.classes.RecipeStep;
+import com.example.dbm.bakingapp.domain.Recipe;
+import com.example.dbm.bakingapp.domain.RecipeIngredient;
+import com.example.dbm.bakingapp.domain.RecipeStep;
 import com.example.dbm.bakingapp.data.RecipeContract;
 
 import com.google.gson.Gson;
